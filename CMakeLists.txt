@@ -131,7 +131,15 @@ if(BUILD_TESTS)
 
   # Add p8 tests
   add_executable(p8_tests 
-    "${TESTS_DIR}/p8_tests/p8_test.cpp"
+    "${TESTS_DIR}/p8_tests/arithmetic_tests.cpp"
+    "${TESTS_DIR}/p8_tests/quire_tests.cpp"
+    "${TESTS_DIR}/p8_tests/conversion_tests.cpp"
+    "${TESTS_DIR}/p8_tests/special_values_tests.cpp"
+    "${TESTS_DIR}/p8_tests/comparison_operator_tests.cpp"
+    "${TESTS_DIR}/p8_tests/increment_decrement_tests.cpp"
+    "${TESTS_DIR}/p8_tests/bit_operations_tests.cpp"
+    "${TESTS_DIR}/p8_tests/specific_values_tests.cpp"
+    "${TESTS_DIR}/p8_tests/advanced_tests.cpp"
     ${COMMON_TEST_SOURCES}
   )
   target_link_libraries(p8_tests gtest gtest_main pthread softposit)

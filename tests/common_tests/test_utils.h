@@ -26,6 +26,9 @@ constexpr int NTESTS32 = 1000000;
 // Random generator setup - global to be used across all test files
 extern std::mt19937 gen;
 
+// Random distributions for p8 tests
+extern std::uniform_int_distribution<int8_t> int_dist8;
+
 // Current operation being tested
 extern std::string current_operation;
 
