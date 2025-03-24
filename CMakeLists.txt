@@ -109,33 +109,49 @@ if(BUILD_TESTS)
   # Enable testing
   enable_testing()
 
-  # Check for test files directory
+  # Ensure tests directory exists
   set(TESTS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/tests")
   if(NOT EXISTS "${TESTS_DIR}")
     file(MAKE_DIRECTORY "${TESTS_DIR}")
     message(STATUS "Created tests directory: ${TESTS_DIR}")
   endif()
 
+  # Common test utilities
+  set(COMMON_TEST_SOURCES
+    "${TESTS_DIR}/common_tests/test_utils.cpp"
+  )
+
+  # Add header files
+  set(COMMON_TEST_HEADERS
+    "${TESTS_DIR}/common_tests/test_utils.h"
+  )
+
+  # Include the tests directory in the include path
+  include_directories(${TESTS_DIR})
+
   # Add p8 tests
-  if(EXISTS "${TESTS_DIR}/p8_test.cpp")
-    add_executable(p8_tests "${TESTS_DIR}/p8_test.cpp")
-    target_link_libraries(p8_tests gtest gtest_main pthread softposit)
-    add_test(NAME p8_tests COMMAND p8_tests)
-  endif()
+  add_executable(p8_tests 
+    "${TESTS_DIR}/p8_tests/p8_test.cpp"
+    ${COMMON_TEST_SOURCES}
+  )
+  target_link_libraries(p8_tests gtest gtest_main pthread softposit)
+  add_test(NAME p8_tests COMMAND p8_tests)
 
   # Add p16 tests
-  if(EXISTS "${TESTS_DIR}/p16_test.cpp")
-    add_executable(p16_tests "${TESTS_DIR}/p16_test.cpp")
-    target_link_libraries(p16_tests gtest gtest_main pthread softposit)
-    add_test(NAME p16_tests COMMAND p16_tests)
-  endif()
+  add_executable(p16_tests 
+    "${TESTS_DIR}/p16_tests/p16_test.cpp"
+    ${COMMON_TEST_SOURCES}
+  )
+  target_link_libraries(p16_tests gtest gtest_main pthread softposit)
+  add_test(NAME p16_tests COMMAND p16_tests)
 
   # Add p32 tests
-  if(EXISTS "${TESTS_DIR}/p32_test.cpp")
-    add_executable(p32_tests "${TESTS_DIR}/p32_test.cpp")
-    target_link_libraries(p32_tests gtest gtest_main pthread softposit)
-    add_test(NAME p32_tests COMMAND p32_tests)
-  endif()
+  add_executable(p32_tests 
+    "${TESTS_DIR}/p32_tests/p32_test.cpp"
+    ${COMMON_TEST_SOURCES}
+  )
+  target_link_libraries(p32_tests gtest gtest_main pthread softposit)
+  add_test(NAME p32_tests COMMAND p32_tests)
 
   # Add a custom target to run all tests
   add_custom_target(check
@@ -157,7 +173,7 @@ if(BUILD_BENCHMARKS)
   set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "Disable benchmark testing" FORCE)
   FetchContent_MakeAvailable(benchmark)
 
-  # Check for benchmark files directory
+  # Ensure benchmark directory exists
   set(BENCHMARKS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/benchmarks")
   if(NOT EXISTS "${BENCHMARKS_DIR}")
     file(MAKE_DIRECTORY "${BENCHMARKS_DIR}")
@@ -165,21 +181,38 @@ if(BUILD_BENCHMARKS)
     message(STATUS "Created benchmarks directory: ${BENCHMARKS_DIR}")
   endif()
 
+  # Common benchmark utilities
+  set(COMMON_BENCH_SOURCES
+    "${TESTS_DIR}/common_tests/test_utils.cpp"  # Reuse test utilities for benchmarks
+  )
+
+  # Ensure benchmarks can find Google Test headers
+  include_directories(${gtest_SOURCE_DIR}/include)
+
   # Add p8 benchmarks
   if(EXISTS "${BENCHMARKS_DIR}/performance/p8_bench.cpp")
-    add_executable(p8_bench "${BENCHMARKS_DIR}/performance/p8_bench.cpp")
+    add_executable(p8_bench 
+      "${BENCHMARKS_DIR}/performance/p8_bench.cpp"
+      ${COMMON_BENCH_SOURCES}
+    )
     target_link_libraries(p8_bench benchmark::benchmark softposit pthread)
   endif()
 
   # Add p16 benchmarks
   if(EXISTS "${BENCHMARKS_DIR}/performance/p16_bench.cpp")
-    add_executable(p16_bench "${BENCHMARKS_DIR}/performance/p16_bench.cpp")
+    add_executable(p16_bench 
+      "${BENCHMARKS_DIR}/performance/p16_bench.cpp"
+      ${COMMON_BENCH_SOURCES}
+    )
     target_link_libraries(p16_bench benchmark::benchmark softposit pthread)
   endif()
 
   # Add p32 benchmarks
   if(EXISTS "${BENCHMARKS_DIR}/performance/p32_bench.cpp")
-    add_executable(p32_bench "${BENCHMARKS_DIR}/performance/p32_bench.cpp")
+    add_executable(p32_bench 
+      "${BENCHMARKS_DIR}/performance/p32_bench.cpp"
+      ${COMMON_BENCH_SOURCES}
+    )
     target_link_libraries(p32_bench benchmark::benchmark softposit pthread)
   endif()
 

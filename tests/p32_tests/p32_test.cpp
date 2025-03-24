@@ -1,319 +1,70 @@
-#include <gtest/gtest.h>
-#include <random>
-#include <functional>
-#include <cmath>
-#include <vector>
-#include <algorithm>
-#include <numeric>
-#include "softposit_cpp.h"
+#include "common_tests/test_utils.h"
 
-// Define constants for number of tests similar to Rust implementation
-#ifdef NDEBUG
-constexpr int NTESTS32 = 10000000;
-#else
-constexpr int NTESTS32 = 1000000;
-#endif
-
-// Random generator setup
-std::random_device rd;
-std::mt19937 gen(rd());
-std::uniform_int_distribution<int32_t> int_dist32(INT32_MIN / 2, INT32_MAX / 2);
+// Random distributions for p32 tests
+std::uniform_int_distribution<int32_t> int_dist32(INT32_MIN/2, INT32_MAX/2);
 std::uniform_real_distribution<double> real_dist(-100.0, 100.0);
 
-// Structure to store epsilon statistics for each operation
-struct EpsilonStats
-{
-    std::string operation;
-    std::vector<double> epsilons;
-};
-
-// Global vector to store all epsilon values
-std::vector<double> all_epsilons;
-
-// Map to store epsilon values for each operation
-std::map<std::string, std::vector<double>> operation_epsilons;
-
-// Current operation being tested
-std::string current_operation = "Unknown";
-
-// Function to calculate and print statistics for a vector of epsilon values
-void printEpsilonStats(const std::string &label, const std::vector<double> &epsilons)
-{
-    if (epsilons.empty())
-    {
-        std::cout << label << ": No epsilon values were recorded." << std::endl;
-        return;
-    }
-
-    // Calculate min
-    double min_epsilon = *std::min_element(epsilons.begin(), epsilons.end());
-
-    // Calculate max
-    double max_epsilon = *std::max_element(epsilons.begin(), epsilons.end());
-
-    // Calculate mean
-    double sum = std::accumulate(epsilons.begin(), epsilons.end(), 0.0);
-    double mean = sum / epsilons.size();
-
-    // Calculate standard deviation
-    double sq_sum = std::inner_product(epsilons.begin(), epsilons.end(),
-                                       epsilons.begin(), 0.0,
-                                       std::plus<double>(),
-                                       [](double a, double b)
-                                       { return a * b; });
-    double std_dev = std::sqrt(sq_sum / epsilons.size() - mean * mean);
-
-    // Calculate median
-    std::vector<double> sorted_epsilons = epsilons;
-    std::sort(sorted_epsilons.begin(), sorted_epsilons.end());
-    double median;
-    size_t size = sorted_epsilons.size();
-    if (size % 2 == 0)
-    {
-        median = (sorted_epsilons[size / 2 - 1] + sorted_epsilons[size / 2]) / 2.0;
-    }
-    else
-    {
-        median = sorted_epsilons[size / 2];
-    }
-
-    // Calculate percentiles (25th and 75th)
-    double p25 = sorted_epsilons[size / 4];
-    double p75 = sorted_epsilons[3 * size / 4];
-
-    // Print statistics
-    std::cout << "\n===== " << label << " =====" << std::endl;
-    std::cout << "Total comparisons: " << epsilons.size() << std::endl;
-    std::cout << "Minimum epsilon: " << min_epsilon << std::endl;
-    std::cout << "Maximum epsilon: " << max_epsilon << std::endl;
-    std::cout << "Mean epsilon: " << mean << std::endl;
-    std::cout << "Median epsilon: " << median << std::endl;
-    std::cout << "25th percentile: " << p25 << std::endl;
-    std::cout << "75th percentile: " << p75 << std::endl;
-    std::cout << "Standard deviation: " << std_dev << std::endl;
-
-    // // Print histogram of epsilon values
-    // const int num_bins = 10;
-    // std::vector<int> histogram(num_bins, 0);
-    // double bin_width = (max_epsilon - min_epsilon) / num_bins;
-    // if (bin_width > 0)
-    // { // Prevent division by zero
-    //     for (double epsilon : epsilons)
-    //     {
-    //         int bin = std::min(static_cast<int>((epsilon - min_epsilon) / bin_width), num_bins - 1);
-    //         histogram[bin]++;
-    //     }
-
-    //     std::cout << "\nHistogram of epsilon values:" << std::endl;
-    //     for (int i = 0; i < num_bins; i++)
-    //     {
-    //         double bin_start = min_epsilon + i * bin_width;
-    //         double bin_end = bin_start + bin_width;
-    //         std::cout << "[" << bin_start << " - " << bin_end << "): "
-    //                   << histogram[i] << " ("
-    //                   << (100.0 * histogram[i] / epsilons.size()) << "%)" << std::endl;
-    //     }
-    // }
-    // else
-    // {
-    //     std::cout << "\nAll epsilon values are identical: " << min_epsilon << std::endl;
-    // }
-}
-
-// Class for epsilon statistics
-class EpsilonStatisticsPrinter : public ::testing::EmptyTestEventListener
-{
-public:
-    virtual void OnTestProgramEnd(const ::testing::UnitTest &unit_test)
-    {
-        // First print global statistics
-        printEpsilonStats("Global Epsilon Statistics", all_epsilons);
-
-        // Then print per-operation statistics
-        for (const auto &pair : operation_epsilons)
-        {
-            printEpsilonStats(pair.first + " Operation Statistics", pair.second);
-        }
-
-        // Print operation comparison
-        if (!operation_epsilons.empty())
-        {
-            std::cout << "\n===== Operation Comparison =====" << std::endl;
-            std::cout << "Operation\tCount\tMin\tMedian\tMean\tMax\tStd Dev" << std::endl;
-
-            for (const auto &pair : operation_epsilons)
-            {
-                const std::string &op = pair.first;
-                const std::vector<double> &epsilons = pair.second;
-
-                if (epsilons.empty())
-                    continue;
-
-                // Calculate statistics
-                double min = *std::min_element(epsilons.begin(), epsilons.end());
-                double max = *std::max_element(epsilons.begin(), epsilons.end());
-                double sum = std::accumulate(epsilons.begin(), epsilons.end(), 0.0);
-                double mean = sum / epsilons.size();
-
-                // Calculate median
-                std::vector<double> sorted = epsilons;
-                std::sort(sorted.begin(), sorted.end());
-                double median;
-                if (sorted.size() % 2 == 0)
-                {
-                    median = (sorted[sorted.size() / 2 - 1] + sorted[sorted.size() / 2]) / 2.0;
-                }
-                else
-                {
-                    median = sorted[sorted.size() / 2];
-                }
-
-                // Calculate standard deviation
-                double sq_sum = std::inner_product(epsilons.begin(), epsilons.end(),
-                                                   epsilons.begin(), 0.0,
-                                                   std::plus<double>(),
-                                                   [](double a, double b)
-                                                   { return a * b; });
-                double std_dev = std::sqrt(sq_sum / epsilons.size() - mean * mean);
-
-                // Print in tabular format
-                std::cout << op << "\t" << epsilons.size() << "\t"
-                          << min << "\t" << median << "\t"
-                          << mean << "\t" << max << "\t"
-                          << std_dev << std::endl;
-            }
-        }
-    }
-};
-
-// Function to calculate the smallest epsilon that makes a and b equal
-double find_smallest_epsilon(double a, double b, double epsilon_min = 1e-12, double epsilon_max = 1e-5)
-{
-    // Step size calculated based on range and desired iterations
-    int num_steps = 1000;
-    double step = (epsilon_max - epsilon_min) / num_steps;
-
-    for (double epsilon = epsilon_min; epsilon <= epsilon_max; epsilon += step)
-    {
-        // Absolute difference check
-        if (std::abs(a - b) < epsilon)
-        {
-            return epsilon;
-        }
-
-        // Relative difference check (with small denominator guard)
-        double rel_diff = std::abs(a - b) / (std::abs(a) + std::abs(b) + 1e-10);
-        if (rel_diff < epsilon)
-        {
-            return epsilon;
-        }
-    }
-
-    return epsilon_max + step; // Return a value larger than epsilon_max if no match
-}
-
-bool double_eq(double a, double b, double epsilon_min = 1e-12, double epsilon_max = 1e-5)
-{
-    // Calculate the smallest epsilon that makes a and b equal
-    double smallest_epsilon = find_smallest_epsilon(a, b, epsilon_min, epsilon_max);
-
-    // Store the epsilon value for later analysis
-    if (smallest_epsilon <= epsilon_max)
-    {
-        all_epsilons.push_back(smallest_epsilon);
-
-        // Store for per-operation analysis
-        if (!current_operation.empty())
-        {
-            operation_epsilons[current_operation].push_back(smallest_epsilon);
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
 //========================================================================================
-// POSIT32 TESTS - Using direct bit comparison like the Rust implementation
+// POSIT32 TESTS
 //========================================================================================
-
-// Generic test function similar to test21_exact in Rust
-void test32_exact(std::function<posit32(posit32, posit32)> posit_op,
-                  std::function<double(double, double)> double_op)
-{
-    for (int i = 0; i < NTESTS32; i++)
-    {
-        // Generate random posit values
-        int32_t raw_a = int_dist32(gen);
-        int32_t raw_b = int_dist32(gen);
-
-        // Create posit values
-        posit32 p_a, p_b;
-        p_a.value = raw_a;
-        p_b.value = raw_b;
-
-        // Convert to double
-        double f_a = p_a.toDouble();
-        double f_b = p_b.toDouble();
-
-        // Calculate results
-        posit32 result = posit_op(p_a, p_b);
-        double expected_double = double_op(f_a, f_b);
-        posit32 expected = expected_double;
-
-        // Compare results directly using bit representation
-        ASSERT_TRUE(double_eq(result.toDouble(), expected.toDouble()))
-            << "Input: (" << f_a << ", " << f_b << ")"
-            << "\nResult: " << result.toDouble()
-            << "\nExpected: " << expected_double;
-    }
-}
 
 // Test case for addition
 TEST(Posit32Arithmetic, Add)
 {
     current_operation = "Addition";
-    test32_exact(
+    test_exact<posit32>(
+        NTESTS32,
         // Posit operation
         [](posit32 a, posit32 b)
         { return a + b; },
         // Equivalent double operation
         [](double a, double b)
-        { return a + b; });
+        { return a + b; },
+        // Random generator
+        []()
+        { return int_dist32(gen); });
 }
 
 // Test case for subtraction
 TEST(Posit32Arithmetic, Sub)
 {
     current_operation = "Subtraction";
-    test32_exact(
+    test_exact<posit32>(
+        NTESTS32,
         // Posit operation
         [](posit32 a, posit32 b)
         { return a - b; },
         // Equivalent double operation
         [](double a, double b)
-        { return a - b; });
+        { return a - b; },
+        // Random generator
+        []()
+        { return int_dist32(gen); });
 }
 
 // Test case for multiplication
 TEST(Posit32Arithmetic, Mul)
 {
     current_operation = "Multiplication";
-    test32_exact(
+    test_exact<posit32>(
+        NTESTS32,
         // Posit operation
         [](posit32 a, posit32 b)
         { return a * b; },
         // Equivalent double operation
         [](double a, double b)
-        { return a * b; });
+        { return a * b; },
+        // Random generator
+        []()
+        { return int_dist32(gen); });
 }
 
 // Test case for division
 TEST(Posit32Arithmetic, Div)
 {
     current_operation = "Division";
-    test32_exact(
+    test_exact<posit32>(
+        NTESTS32,
         // Posit operation
         [](posit32 a, posit32 b)
         {
@@ -332,14 +83,16 @@ TEST(Posit32Arithmetic, Div)
                 return 0.0;
             }
             return a / b;
-        });
+        },
+        // Random generator
+        []()
+        { return int_dist32(gen); });
 }
 
 // Test square root operation
 TEST(Posit32Arithmetic, Sqrt)
 {
     current_operation = "Square Root";
-    std::uniform_int_distribution<int32_t> dist(0, INT32_MAX); // Only positive values
 
     for (int i = 0; i < NTESTS32; i++)
     {
@@ -425,7 +178,7 @@ TEST(Posit32Arithmetic, MulAdd)
 // QUIRE32 TESTS
 //========================================================================================
 
-// Test for quire_mul_add similar to Rust implementation
+// Test for quire_mul_add
 TEST(Quire32Operations, MulAdd)
 {
     current_operation = "Quire Multiply-Add";
@@ -463,7 +216,7 @@ TEST(Quire32Operations, MulAdd)
     }
 }
 
-// Test for quire_mul_sub similar to Rust implementation
+// Test for quire_mul_sub
 TEST(Quire32Operations, MulSub)
 {
     current_operation = "Quire Multiply-Subtract";
@@ -500,6 +253,10 @@ TEST(Quire32Operations, MulSub)
             << "\nExpected: " << f;
     }
 }
+
+//========================================================================================
+// CONVERSION TESTS
+//========================================================================================
 
 // Test conversion from posit32 to double for all possible values
 TEST(Posit32Conversion, ConvertP32ToF64)
@@ -633,7 +390,8 @@ TEST(Posit32Conversion, ConvertP32ToI64)
     }
 }
 
-// Test Special Values
+//========================================================================================
+// SPECIAL VALUES TESTS
 //========================================================================================
 
 TEST(Posit32Special, NaR)
@@ -651,7 +409,8 @@ TEST(Posit32Special, NaR)
     });
 }
 
-// Test Comparison Operators
+//========================================================================================
+// COMPARISON OPERATOR TESTS
 //========================================================================================
 
 TEST(Posit32Comparison, LessThan)
@@ -742,7 +501,8 @@ TEST(Posit32Comparison, GreaterThanEqual)
     ASSERT_FALSE(pa >= pc);
 }
 
-// Test Increment/Decrement
+//========================================================================================
+// INCREMENT/DECREMENT TESTS
 //========================================================================================
 
 TEST(Posit32Operators, Increment)
@@ -763,7 +523,8 @@ TEST(Posit32Operators, Decrement)
     ASSERT_TRUE(p < original);
 }
 
-// Test Bit Operations
+//========================================================================================
+// BIT OPERATIONS TESTS
 //========================================================================================
 
 TEST(Posit32BitOperations, BitwiseNot)
@@ -817,7 +578,8 @@ TEST(Posit32BitOperations, RightShift)
     ASSERT_EQ(result.value, 0x01234567);
 }
 
-// Additional tests for specific values
+//========================================================================================
+// SPECIFIC VALUES TESTS
 //========================================================================================
 
 TEST(Posit32SpecificValues, Zero)
@@ -848,15 +610,16 @@ TEST(Posit32SpecificValues, NegativeOne)
     ASSERT_EQ(neg_one.value, 0xC0000000);
 }
 
-// More advanced examples from the Rust tests
+//========================================================================================
+// ADVANCED TESTS
 //========================================================================================
 
 // Test that adding and then subtracting the same value returns the original
 TEST(Posit32Advanced, AddSubCancel)
 {
     current_operation = "Add-Sub Cancellation";
-    for (int i = 0; i < NTESTS32 / 10; i++) // Reduced iteration count
-    {
+    for (int i = 0; i < NTESTS32 / 10; i++)
+    { // Reduced iteration count
         posit32 p_a, p_b;
         p_a.value = int_dist32(gen);
         p_b.value = int_dist32(gen);
@@ -874,8 +637,8 @@ TEST(Posit32Advanced, AddSubCancel)
 TEST(Posit32Advanced, MulDivCancel)
 {
     current_operation = "Mul-Div Cancellation";
-    for (int i = 0; i < NTESTS32 / 10; i++) // Reduced iteration count
-    {
+    for (int i = 0; i < NTESTS32 / 10; i++)
+    { // Reduced iteration count
         posit32 p_a, p_b;
         p_a.value = int_dist32(gen);
         p_b.value = int_dist32(gen);
