@@ -4,8 +4,14 @@
 std::random_device rd;
 std::mt19937 gen(rd());
 
-// Initialize global distributions
+// Random distributions for p8 tests
 std::uniform_int_distribution<int8_t> int_dist8(INT8_MIN, INT8_MAX);
+
+// Random distributions for p16 tests
+std::uniform_int_distribution<int16_t> int_dist16(INT16_MIN, INT16_MAX);
+
+// Random distributions for p32 tests
+std::uniform_int_distribution<int32_t> int_dist32(INT32_MIN, INT32_MAX);
 
 // Initialize global operation tracking
 std::string current_operation = "Unknown";

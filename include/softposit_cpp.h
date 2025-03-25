@@ -263,6 +263,11 @@ struct posit16 {
   uint16_t value;
   posit16(double x = 0) : value(castUI(convertDoubleToP16(x))) {}
 
+  static posit16 maxpos() { return 0x7FFF; }
+  static posit16 minpos() { return 0x8000; }
+  static posit16 maxneg() { return 0x8001; }
+  static posit16 minneg() { return 0xFFFF; }
+
   // Equal
   posit16 &operator=(const double a) {
     value = castUI(convertDoubleToP16(a));
@@ -484,6 +489,11 @@ struct posit16 {
 struct posit32 {
   uint32_t value;
   posit32(double x = 0) : value(castUI(convertDoubleToP32(x))) {}
+
+  static posit32 maxpos() { return 0x7FFFFFFF; }
+  static posit32 minpos() { return 0x80000000; }
+  static posit32 maxneg() { return 0x80000001; }
+  static posit32 minneg() { return 0xFFFFFFFF; }
 
   // Equal
   posit32 &operator=(const double a) {

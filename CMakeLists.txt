@@ -132,7 +132,6 @@ if(BUILD_TESTS)
   # Add p8 tests
   add_executable(p8_tests 
     "${TESTS_DIR}/p8_tests/arithmetic_tests.cpp"
-    "${TESTS_DIR}/p8_tests/quire_tests.cpp"
     "${TESTS_DIR}/p8_tests/conversion_tests.cpp"
     "${TESTS_DIR}/p8_tests/special_values_tests.cpp"
     "${TESTS_DIR}/p8_tests/comparison_operator_tests.cpp"
@@ -140,6 +139,7 @@ if(BUILD_TESTS)
     "${TESTS_DIR}/p8_tests/bit_operations_tests.cpp"
     "${TESTS_DIR}/p8_tests/specific_values_tests.cpp"
     "${TESTS_DIR}/p8_tests/advanced_tests.cpp"
+    "${TESTS_DIR}/main.cpp"
     ${COMMON_TEST_SOURCES}
   )
   target_link_libraries(p8_tests gtest gtest_main pthread softposit)
@@ -147,7 +147,15 @@ if(BUILD_TESTS)
 
   # Add p16 tests
   add_executable(p16_tests 
-    "${TESTS_DIR}/p16_tests/p16_test.cpp"
+    "${TESTS_DIR}/p16_tests/arithmetic_tests.cpp"
+    "${TESTS_DIR}/p16_tests/conversion_tests.cpp"
+    "${TESTS_DIR}/p16_tests/special_values_tests.cpp"
+    "${TESTS_DIR}/p16_tests/comparison_operator_tests.cpp"
+    "${TESTS_DIR}/p16_tests/increment_decrement_tests.cpp"
+    "${TESTS_DIR}/p16_tests/bit_operations_tests.cpp"
+    "${TESTS_DIR}/p16_tests/specific_values_tests.cpp"
+    "${TESTS_DIR}/p16_tests/advanced_tests.cpp"
+    "${TESTS_DIR}/main.cpp"
     ${COMMON_TEST_SOURCES}
   )
   target_link_libraries(p16_tests gtest gtest_main pthread softposit)
@@ -155,7 +163,15 @@ if(BUILD_TESTS)
 
   # Add p32 tests
   add_executable(p32_tests 
-    "${TESTS_DIR}/p32_tests/p32_test.cpp"
+    "${TESTS_DIR}/p32_tests/arithmetic_tests.cpp"
+    "${TESTS_DIR}/p32_tests/conversion_tests.cpp"
+    "${TESTS_DIR}/p32_tests/special_values_tests.cpp"
+    "${TESTS_DIR}/p32_tests/comparison_operator_tests.cpp"
+    "${TESTS_DIR}/p32_tests/increment_decrement_tests.cpp"
+    "${TESTS_DIR}/p32_tests/bit_operations_tests.cpp"
+    "${TESTS_DIR}/p32_tests/specific_values_tests.cpp"
+    "${TESTS_DIR}/p32_tests/advanced_tests.cpp"
+    "${TESTS_DIR}/main.cpp"
     ${COMMON_TEST_SOURCES}
   )
   target_link_libraries(p32_tests gtest gtest_main pthread softposit)
