@@ -53,6 +53,11 @@ posit32_t softposit_mulAddP32(uint_fast32_t uiA, uint_fast32_t uiB,
   int_fast16_t kA = 0, kC = 0, kZ = 0, shiftRight;
   uint_fast64_t frac64C, frac64Z;
 
+  if (op == softposit_mulAdd_subC)
+    uiC = -uiC;
+  if (op == softposit_mulAdd_subProd)
+    uiA = -uiA;
+
   // NaR
   if (uiA == 0x80000000 || uiB == 0x80000000 || uiC == 0x80000000) {
     uZ.ui = 0x80000000;
@@ -61,11 +66,6 @@ posit32_t softposit_mulAddP32(uint_fast32_t uiA, uint_fast32_t uiB,
     uZ.ui = uiC;
     return uZ.p;
   }
-
-  if (op == softposit_mulAdd_subC)
-    uiC = -uiC;
-  if (op == softposit_mulAdd_subProd)
-    uiA = -uiA;
 
   signA = signP32UI(uiA);
   signB = signP32UI(uiB);

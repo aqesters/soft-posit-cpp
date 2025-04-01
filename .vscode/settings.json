@@ -9,6 +9,8 @@
         "*.v": "verilog",
         "*.vhd": "vhdl",
         "atomic": "cpp",
-        "cstdint": "cpp"
+        "cstdint": "cpp",
+        "cmath": "cpp",
+        "complex": "cpp"
     }
 }

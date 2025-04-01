@@ -243,6 +243,54 @@ struct posit8 {
     value = castUI(p8_sqrt(castP8(value)));
     return *this;
   }
+  posit8 &exp() {
+    value = castUI(p8_exp(castP8(value)));
+    return *this;
+  }
+  posit8 &exp2() {
+    value = castUI(p8_exp2(castP8(value)));
+    return *this;
+  }
+  posit8 &ln() {
+    value = castUI(p8_ln(castP8(value)));
+    return *this;
+  }
+  posit8 &log2() {
+    value = castUI(p8_log2(castP8(value)));
+    return *this;
+  }
+  posit8 &sin_pi() {
+    value = castUI(p8_sin_pi(castP8(value)));
+    return *this;
+  }
+  posit8 &cos_pi() {
+    value = castUI(p8_cos_pi(castP8(value)));
+    return *this;
+  }
+  posit8 &tan_pi() {
+    value = castUI(p8_tan_pi(castP8(value)));
+    return *this;
+  }
+  posit8 &asin_pi() {
+    value = castUI(p8_asin_pi(castP8(value)));
+    return *this;
+  }
+  posit8 &acos_pi() {
+    value = castUI(p8_acos_pi(castP8(value)));
+    return *this;
+  }
+  posit8 &atan_pi() {
+    value = castUI(p8_atan_pi(castP8(value)));
+    return *this;
+  }
+  posit8 &ceil() {
+    value = castUI(p8_ceil(castP8(value)));
+    return *this;
+  }
+  posit8 &floor() {
+    value = castUI(p8_floor(castP8(value)));
+    return *this;
+  }
   posit8 &rint() {
     value = castUI(p8_roundToInt(castP8(value)));
     return *this;
@@ -486,6 +534,50 @@ struct posit16 {
     value = castUI(p16_exp(castP16(value)));
     return *this;
   }
+  posit16 &exp2() {
+    value = castUI(p16_exp2(castP16(value)));
+    return *this;
+  }
+  posit16 &ln() {
+    value = castUI(p16_ln(castP16(value)));
+    return *this;
+  }
+  posit16 &log2() {
+    value = castUI(p16_log2(castP16(value)));
+    return *this;
+  }
+  posit16 &sin_pi() {
+    value = castUI(p16_sin_pi(castP16(value)));
+    return *this;
+  }
+  posit16 &cos_pi() {
+    value = castUI(p16_cos_pi(castP16(value)));
+    return *this;
+  }
+  posit16 &tan_pi() {
+    value = castUI(p16_tan_pi(castP16(value)));
+    return *this;
+  }
+  posit16 &asin_pi() {
+    value = castUI(p16_asin_pi(castP16(value)));
+    return *this;
+  }
+  posit16 &acos_pi() {
+    value = castUI(p16_acos_pi(castP16(value)));
+    return *this;
+  }
+  posit16 &atan_pi() {
+    value = castUI(p16_atan_pi(castP16(value)));
+    return *this;
+  }
+  posit16 &ceil() {
+    value = castUI(p16_ceil(castP16(value)));
+    return *this;
+  }
+  posit16 &floor() {
+    value = castUI(p16_floor(castP16(value)));
+    return *this;
+  }
   posit16 &rint() {
     value = castUI(p16_roundToInt(castP16(value)));
     return *this;
@@ -721,8 +813,57 @@ struct posit32 {
   long long int toInt() const { return p32_int(castP32(value)); }
 
   long long int toRInt() const { return p32_to_i64(castP32(value)); }
+
   posit32 &sqrt() {
     value = castUI(p32_sqrt(castP32(value)));
+    return *this;
+  }
+  posit32 &exp() {
+    value = castUI(p32_exp(castP32(value)));
+    return *this;
+  }
+  posit32 &exp2() {
+    value = castUI(p32_exp2(castP32(value)));
+    return *this;
+  }
+  posit32 &ln() {
+    value = castUI(p32_ln(castP32(value)));
+    return *this;
+  }
+  posit32 &log2() {
+    value = castUI(p32_log2(castP32(value)));
+    return *this;
+  }
+  posit32 &sin_pi() {
+    value = castUI(p32_sin_pi(castP32(value)));
+    return *this;
+  }
+  posit32 &cos_pi() {
+    value = castUI(p32_cos_pi(castP32(value)));
+    return *this;
+  }
+  posit32 &tan_pi() {
+    value = castUI(p32_tan_pi(castP32(value)));
+    return *this;
+  }
+  posit32 &asin_pi() {
+    value = castUI(p32_asin_pi(castP32(value)));
+    return *this;
+  }
+  posit32 &acos_pi() {
+    value = castUI(p32_acos_pi(castP32(value)));
+    return *this;
+  }
+  posit32 &atan_pi() {
+    value = castUI(p32_atan_pi(castP32(value)));
+    return *this;
+  }
+  posit32 &ceil() {
+    value = castUI(p32_ceil(castP32(value)));
+    return *this;
+  }
+  posit32 &floor() {
+    value = castUI(p32_floor(castP32(value)));
     return *this;
   }
   posit32 &rint() {
@@ -1730,19 +1871,192 @@ inline std::ostream &operator<<(std::ostream &os, const posit_2 &p) {
 
 // Math lib
 
-// inline posit8 exp(posit8 a) {
-//   a.value = castUI(p8_exp(castP8(a.value)));
-//   return a;
-// }
+// Exponential functions
+inline posit8 exp(posit8 a) {
+  a.value = castUI(p8_exp(castP8(a.value)));
+  return a;
+}
+
 inline posit16 exp(posit16 a) {
   a.value = castUI(p16_exp(castP16(a.value)));
   return a;
 }
-// inline posit32 exp(posit32 a) {
-//   a.value =
-//       castUI(convertDoubleToP32(exp(convertP32ToDouble(castP32(a.value)))));
-//   return a;
-// }
+
+inline posit32 exp(posit32 a) {
+  a.value = castUI(p32_exp(castP32(a.value)));
+  return a;
+}
+
+// Base-2 exponential
+inline posit8 exp2(posit8 a) {
+  a.value = castUI(p8_exp2(castP8(a.value)));
+  return a;
+}
+
+inline posit16 exp2(posit16 a) {
+  a.value = castUI(p16_exp2(castP16(a.value)));
+  return a;
+}
+
+inline posit32 exp2(posit32 a) {
+  a.value = castUI(p32_exp2(castP32(a.value)));
+  return a;
+}
+
+// Natural logarithm
+inline posit8 ln(posit8 a) {
+  a.value = castUI(p8_ln(castP8(a.value)));
+  return a;
+}
+
+inline posit16 ln(posit16 a) {
+  a.value = castUI(p16_ln(castP16(a.value)));
+  return a;
+}
+
+inline posit32 ln(posit32 a) {
+  a.value = castUI(p32_ln(castP32(a.value)));
+  return a;
+}
+
+// Base-2 logarithm
+inline posit8 log2(posit8 a) {
+  a.value = castUI(p8_log2(castP8(a.value)));
+  return a;
+}
+
+inline posit16 log2(posit16 a) {
+  a.value = castUI(p16_log2(castP16(a.value)));
+  return a;
+}
+
+inline posit32 log2(posit32 a) {
+  a.value = castUI(p32_log2(castP32(a.value)));
+  return a;
+}
+
+// Trigonometric functions
+inline posit8 sin_pi(posit8 a) {
+  a.value = castUI(p8_sin_pi(castP8(a.value)));
+  return a;
+}
+
+inline posit16 sin_pi(posit16 a) {
+  a.value = castUI(p16_sin_pi(castP16(a.value)));
+  return a;
+}
+
+inline posit32 sin_pi(posit32 a) {
+  a.value = castUI(p32_sin_pi(castP32(a.value)));
+  return a;
+}
+
+inline posit8 cos_pi(posit8 a) {
+  a.value = castUI(p8_cos_pi(castP8(a.value)));
+  return a;
+}
+
+inline posit16 cos_pi(posit16 a) {
+  a.value = castUI(p16_cos_pi(castP16(a.value)));
+  return a;
+}
+
+inline posit32 cos_pi(posit32 a) {
+  a.value = castUI(p32_cos_pi(castP32(a.value)));
+  return a;
+}
+
+inline posit8 tan_pi(posit8 a) {
+  a.value = castUI(p8_tan_pi(castP8(a.value)));
+  return a;
+}
+
+inline posit16 tan_pi(posit16 a) {
+  a.value = castUI(p16_tan_pi(castP16(a.value)));
+  return a;
+}
+
+inline posit32 tan_pi(posit32 a) {
+  a.value = castUI(p32_tan_pi(castP32(a.value)));
+  return a;
+}
+
+// Inverse trigonometric functions
+inline posit8 asin_pi(posit8 a) {
+  a.value = castUI(p8_asin_pi(castP8(a.value)));
+  return a;
+}
+
+inline posit16 asin_pi(posit16 a) {
+  a.value = castUI(p16_asin_pi(castP16(a.value)));
+  return a;
+}
+
+inline posit32 asin_pi(posit32 a) {
+  a.value = castUI(p32_asin_pi(castP32(a.value)));
+  return a;
+}
+
+inline posit8 acos_pi(posit8 a) {
+  a.value = castUI(p8_acos_pi(castP8(a.value)));
+  return a;
+}
+
+inline posit16 acos_pi(posit16 a) {
+  a.value = castUI(p16_acos_pi(castP16(a.value)));
+  return a;
+}
+
+inline posit32 acos_pi(posit32 a) {
+  a.value = castUI(p32_acos_pi(castP32(a.value)));
+  return a;
+}
+
+inline posit8 atan_pi(posit8 a) {
+  a.value = castUI(p8_atan_pi(castP8(a.value)));
+  return a;
+}
+
+inline posit16 atan_pi(posit16 a) {
+  a.value = castUI(p16_atan_pi(castP16(a.value)));
+  return a;
+}
+
+inline posit32 atan_pi(posit32 a) {
+  a.value = castUI(p32_atan_pi(castP32(a.value)));
+  return a;
+}
+
+// Ceiling and floor functions
+inline posit8 ceil(posit8 a) {
+  a.value = castUI(p8_ceil(castP8(a.value)));
+  return a;
+}
+
+inline posit16 ceil(posit16 a) {
+  a.value = castUI(p16_ceil(castP16(a.value)));
+  return a;
+}
+
+inline posit32 ceil(posit32 a) {
+  a.value = castUI(p32_ceil(castP32(a.value)));
+  return a;
+}
+
+inline posit8 floor(posit8 a) {
+  a.value = castUI(p8_floor(castP8(a.value)));
+  return a;
+}
+
+inline posit16 floor(posit16 a) {
+  a.value = castUI(p16_floor(castP16(a.value)));
+  return a;
+}
+
+inline posit32 floor(posit32 a) {
+  a.value = castUI(p32_floor(castP32(a.value)));
+  return a;
+}
 
 #endif // CPLUSPLUS
 
