@@ -14,8 +14,8 @@ const int MAX_ITERATIONS = 1000;
 const double DEFAULT_ZOOM = 1.0;
 const double DEFAULT_CENTER_X = 0.0;
 const double DEFAULT_CENTER_Y = 0.0;
-const double DEFAULT_C_REAL = -0.8;
-const double DEFAULT_C_IMAG = 0.156;
+const double DEFAULT_C_REAL = -0.7;
+const double DEFAULT_C_IMAG = 0.27015;
 
 // Complex number operations using p32 posits for high precision
 struct ComplexP32 {
@@ -46,26 +46,27 @@ struct ComplexP32 {
   }
 };
 
-// Function to calculate the color based on the number of iterations
+// Improved coloring function with better visualization of detail
 void getColor(int iterations, double smoothColor, int &r, int &g, int &b) {
   if (iterations == MAX_ITERATIONS) {
-    r = g = b = 0; // Black
+    r = g = b = 0; // Black for points in the set
     return;
   }
-
-  // Create a smooth color gradient using a modified version of the "hot"
-  // colormap
-  double t = smoothColor;
-
-  // Oscillate between different hues
-  double freq = 0.1;
-  double phase1 = 0.0;
-  double phase2 = 2.0;
-  double phase3 = 4.0;
-
-  r = static_cast<int>(255 * 0.5 * (1 + sin(freq * t + phase1)));
-  g = static_cast<int>(255 * 0.5 * (1 + sin(freq * t + phase2)));
-  b = static_cast<int>(255 * 0.5 * (1 + sin(freq * t + phase3)));
+  
+  // Use a combination of trigonometric functions for smooth color transitions
+  // that highlight detail at different iteration levels
+  double t = smoothColor * 0.05;  // Scale factor for color variation
+  
+  // Use a combination of sine waves with different frequencies and phases
+  // This creates more varied coloring that helps visualize fine details
+  double cr = sin(t * 3.0) * sin(t * 5.0);
+  double cg = sin(t * 3.0 + 2.1) * sin(t * 5.0 + 1.0);
+  double cb = sin(t * 2.0 + 4.2) * sin(t * 3.0 + 2.0);
+  
+  // Map to RGB range [0, 255]
+  r = static_cast<int>(255 * (0.5 + 0.5 * cr));
+  g = static_cast<int>(255 * (0.5 + 0.5 * cg));
+  b = static_cast<int>(255 * (0.5 + 0.5 * cb));
 }
 
 // Generate Julia set at a specific zoom level and center point
@@ -123,12 +124,11 @@ void generateJuliaSet(double zoomFactor, double centerX, double centerY,
         // Convert to double for final calculation
         double mag = sqrt(convertP32ToDouble(magSquared));
 
-        // Alternative smooth coloring formula that doesn't require log
-        // This uses normalized iteration count plus a fractional part based on
-        // final magnitude
-        double nu = iterations + 1 - (mag - 2.0) / (4.0 - 2.0);
+        // Improved smooth coloring formula for better detail visualization
+        // Use bailout value and final magnitude for fractional part
+        double nu = iterations + 1.0 - (log(log(mag)) / log(2.0));
 
-        // Multiply by a factor to get good color distribution
+        // Scale to get good color distribution
         smoothColor = nu * 10.0;
       } else {
         smoothColor = iterations;
