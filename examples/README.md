@@ -44,9 +44,23 @@ cd build/multiplication_closure
 
 See [multiplication_closure/README.md](multiplication_closure/README.md) for more details.
 
+### Julia Set Zoom Comparison
+
+This example visually demonstrates the precision advantages of posit arithmetic compared to traditional floating-point when generating Julia set fractals at high zoom levels.
+
+To run:
+```bash
+cd build/julia_set_zoom
+./julia_set_comparison
+```
+
+This will generate multiple comparison images at different zoom levels, showing how posits maintain precision in deep zooms where floating-point begins to fail.
+
+See [julia_set_zoom/README.md](julia_set_zoom/README.md) for more details.
+
 ## Viewing PPM Images
 
-Both examples produce PPM image files. You can view these with:
+All examples produce PPM image files. You can view these with:
 
 1. Many image viewers support PPM format directly
 2. Use ImageMagick to convert: `convert image.ppm image.png`

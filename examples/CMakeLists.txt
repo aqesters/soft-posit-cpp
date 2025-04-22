@@ -40,4 +40,5 @@ endif()
 
 # Add subdirectories
 add_subdirectory(mandelbrot)
-add_subdirectory(multiplication_closure) 
+add_subdirectory(multiplication_closure)
+add_subdirectory(julia_set_zoom) 
