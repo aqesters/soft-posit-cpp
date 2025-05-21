@@ -4,7 +4,6 @@
 
 // Test for p8_asin_pi function implementation
 TEST(Posit8MathFunctions, AsinPiFunction) {
-  current_operation = "Inverse Sine Function (asin(x)/π)";
 
   // Create a distribution that generates values in the valid range for asin [-1, 1]
   std::uniform_real_distribution<double> valid_dist(-0.99, 0.99);
@@ -30,7 +29,6 @@ TEST(Posit8MathFunctions, AsinPiFunction) {
 
 // Test specific known values for asin_pi function
 TEST(Posit8MathFunctions, AsinPiSpecificValues) {
-  current_operation = "Inverse Sine Function (asin(x)/π) Special Cases";
 
   // asin(0)/π = 0
   posit8 zero = posit8(0.0);
@@ -68,7 +66,6 @@ TEST(Posit8MathFunctions, AsinPiSpecificValues) {
 
 // Test for p8_acos_pi function implementation
 TEST(Posit8MathFunctions, AcosPiFunction) {
-  current_operation = "Inverse Cosine Function (acos(x)/π)";
 
   // Create a distribution that generates values in the valid range for acos [-1, 1]
   std::uniform_real_distribution<double> valid_dist(-0.99, 0.99);
@@ -94,7 +91,6 @@ TEST(Posit8MathFunctions, AcosPiFunction) {
 
 // Test specific known values for acos_pi function
 TEST(Posit8MathFunctions, AcosPiSpecificValues) {
-  current_operation = "Inverse Cosine Function (acos(x)/π) Special Cases";
 
   // acos(1)/π = 0
   posit8 one = posit8(1.0);
@@ -133,7 +129,6 @@ TEST(Posit8MathFunctions, AcosPiSpecificValues) {
 
 // Test for p8_atan_pi function implementation
 TEST(Posit8MathFunctions, AtanPiFunction) {
-  current_operation = "Inverse Tangent Function (atan(x)/π)";
 
   // Create a distribution that generates values across a reasonable range
   // atan is defined for all real values, but we'll use a limited range to avoid extreme values
@@ -160,7 +155,6 @@ TEST(Posit8MathFunctions, AtanPiFunction) {
 
 // Test specific known values for atan_pi function
 TEST(Posit8MathFunctions, AtanPiSpecificValues) {
-  current_operation = "Inverse Tangent Function (atan(x)/π) Special Cases";
 
   // atan(0)/π = 0
   posit8 zero = posit8(0.0);
@@ -192,7 +186,6 @@ TEST(Posit8MathFunctions, AtanPiSpecificValues) {
 
 // Test inverse relationships between sin_pi and asin_pi
 TEST(Posit8MathFunctions, SinAsinInverse) {
-  current_operation = "Sine and Inverse Sine Inverse Relationship";
 
   // Create a distribution for values in the range [-0.5, 0.5]
   // This corresponds to the range [-π/2, π/2] for x in sin(π*x)

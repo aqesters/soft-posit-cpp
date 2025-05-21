@@ -4,7 +4,6 @@
 
 // Test that adding and then subtracting the same value returns the original
 TEST(Posit8Advanced, AddSubCancel) {
-  current_operation = "Add-Sub Cancellation";
 
   // Create a distribution that generates values in the range [-MAX/2, MAX/2]
   std::uniform_int_distribution<int8_t> safe_dist(INT8_MIN / 2, INT8_MAX / 2);
@@ -34,7 +33,6 @@ TEST(Posit8Advanced, AddSubCancel) {
 // // Test that multiplying and then dividing by the same value returns the
 // // original
 // TEST(Posit8Advanced, MulDivCancel) {
-//   current_operation = "Mul-Div Cancellation";
 
 //   // Create a distribution that generates values in the range [-MAX/2, MAX/2]
 //   std::uniform_int_distribution<int8_t> safe_dist(INT8_MIN / 2, INT8_MAX / 2);
@@ -64,7 +62,6 @@ TEST(Posit8Advanced, AddSubCancel) {
 
 // Test for overflow behavior
 TEST(Posit8Advanced, OverflowHandling) {
-  current_operation = "Overflow Handling";
 
   // Test overflow with addition
   posit8 max_posit = posit8().maxpos();
@@ -88,7 +85,6 @@ TEST(Posit8Advanced, OverflowHandling) {
 
 // Test for subnormal values handling
 TEST(Posit8Advanced, SubnormalHandling) {
-  current_operation = "Subnormal Values";
 
   // Test with very small positive values
   posit8 min_positive = posit8().minpos();

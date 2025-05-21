@@ -6,7 +6,6 @@
 
 // Test case for addition
 TEST(Posit32Arithmetic, Add) {
-  current_operation = "Addition";
   test_exact<posit32>(
       NTESTS32,
       // Posit operation
@@ -19,7 +18,6 @@ TEST(Posit32Arithmetic, Add) {
 
 // Test case for subtraction
 TEST(Posit32Arithmetic, Sub) {
-  current_operation = "Subtraction";
   test_exact<posit32>(
       NTESTS32,
       // Posit operation
@@ -32,7 +30,6 @@ TEST(Posit32Arithmetic, Sub) {
 
 // Test case for multiplication
 TEST(Posit32Arithmetic, Mul) {
-  current_operation = "Multiplication";
   test_exact<posit32>(
       NTESTS32,
       // Posit operation
@@ -45,7 +42,6 @@ TEST(Posit32Arithmetic, Mul) {
 
 // Test case for division
 TEST(Posit32Arithmetic, Div) {
-  current_operation = "Division";
   test_exact<posit32>(
       NTESTS32,
       // Posit operation
@@ -69,7 +65,6 @@ TEST(Posit32Arithmetic, Div) {
 
 // Test square root operation
 TEST(Posit32Arithmetic, Sqrt) {
-  current_operation = "Square Root";
 
   for (int i = 0; i < NTESTS32; i++) {
     // Generate random posit value
@@ -96,7 +91,6 @@ TEST(Posit32Arithmetic, Sqrt) {
 
 // Test rounding operation
 TEST(Posit32Arithmetic, Round) {
-  current_operation = "Rounding";
   for (int i = 0; i < NTESTS32; i++) {
     // Generate random posit value
     posit32 p_a;
@@ -127,7 +121,6 @@ TEST(Posit32Arithmetic, Round) {
 
 // Test fused multiply-add operation
 TEST(Posit32Arithmetic, MulAdd) {
-  current_operation = "Fused Multiply-Add";
   for (int i = 0; i < NTESTS32; i++) {
     // Generate random posit values
     posit32 p_a, p_b, p_c;
@@ -163,7 +156,6 @@ TEST(Posit32Arithmetic, MulAdd) {
 
 // Test fused multiply-subtract operation (a*b-c)
 TEST(Posit32Arithmetic, MulSub) {
-  current_operation = "Fused Multiply-Subtract";
   for (int i = 0; i < NTESTS32; i++) {
     // Generate random posit values
     posit32 p_a, p_b, p_c;
@@ -199,7 +191,6 @@ TEST(Posit32Arithmetic, MulSub) {
 
 // Test negative fused multiply-add operation (c-a*b)
 TEST(Posit32Arithmetic, SubMul) {
-  current_operation = "Negative Fused Multiply-Add";
   for (int i = 0; i < NTESTS32; i++) {
     // Generate random posit values
     posit32 p_a, p_b, p_c;

@@ -4,7 +4,6 @@
 
 // Test for quire_mul_add
 TEST(Quire16Operations, MulAdd) {
-  current_operation = "Quire Multiply-Add";
   for (int i = 0; i < NTESTS16; i++) {
     // Generate random posit values
     posit16 p_a, p_b, p_c;
@@ -43,7 +42,6 @@ TEST(Quire16Operations, MulAdd) {
 
 // Test for quire_mul_sub
 TEST(Quire16Operations, MulSub) {
-  current_operation = "Quire Multiply-Subtract";
   for (int i = 0; i < NTESTS16; i++) {
     // Generate random posit values
     posit16 p_a, p_b, p_c;

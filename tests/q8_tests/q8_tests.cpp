@@ -6,7 +6,6 @@
 
 // Test for quire_mul_add
 TEST(Quire8Operations, MulAdd) {
-  current_operation = "Quire Multiply-Add";
   for (int i = 0; i < NTESTS8; i++) {
     // Generate random posit values
     posit8 p_a, p_b, p_c;
@@ -45,7 +44,6 @@ TEST(Quire8Operations, MulAdd) {
 
 // Test for quire_mul_sub
 TEST(Quire8Operations, MulSub) {
-  current_operation = "Quire Multiply-Subtract";
   for (int i = 0; i < NTESTS8; i++) {
     // Generate random posit values
     posit8 p_a, p_b, p_c;

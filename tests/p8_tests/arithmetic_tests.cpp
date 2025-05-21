@@ -6,7 +6,6 @@
 
 // Test case for addition
 TEST(Posit8Arithmetic, Add) {
-  current_operation = "Addition";
   test_exact<posit8>(
       NTESTS8,
       // Posit operation
@@ -19,7 +18,6 @@ TEST(Posit8Arithmetic, Add) {
 
 // Test case for subtraction
 TEST(Posit8Arithmetic, Sub) {
-  current_operation = "Subtraction";
   test_exact<posit8>(
       NTESTS8,
       // Posit operation
@@ -32,7 +30,6 @@ TEST(Posit8Arithmetic, Sub) {
 
 // Test case for multiplication
 TEST(Posit8Arithmetic, Mul) {
-  current_operation = "Multiplication";
   test_exact<posit8>(
       NTESTS8,
       // Posit operation
@@ -45,7 +42,6 @@ TEST(Posit8Arithmetic, Mul) {
 
 // Test case for division
 TEST(Posit8Arithmetic, Div) {
-  current_operation = "Division";
   test_exact<posit8>(
       NTESTS8,
       // Posit operation
@@ -69,7 +65,6 @@ TEST(Posit8Arithmetic, Div) {
 
 // Test square root operation
 TEST(Posit8Arithmetic, Sqrt) {
-  current_operation = "Square Root";
 
   for (int i = 0; i < NTESTS8; i++) {
     // Generate random posit value
@@ -96,7 +91,6 @@ TEST(Posit8Arithmetic, Sqrt) {
 
 // Test rounding operation
 TEST(Posit8Arithmetic, Round) {
-  current_operation = "Rounding";
   for (int i = 0; i < NTESTS8; i++) {
     // Generate random posit value
     posit8 p_a;
@@ -127,7 +121,6 @@ TEST(Posit8Arithmetic, Round) {
 
 // Test fused multiply-add operation
 TEST(Posit8Arithmetic, MulAdd) {
-  current_operation = "Fused Multiply-Add";
   for (int i = 0; i < NTESTS8; i++) {
     // Generate random posit values
     posit8 p_a, p_b, p_c;
@@ -154,7 +147,6 @@ TEST(Posit8Arithmetic, MulAdd) {
 
 // Test fused multiply-subtract operation (a*b-c)
 TEST(Posit8Arithmetic, MulSub) {
-  current_operation = "Fused Multiply-Subtract";
   for (int i = 0; i < NTESTS8; i++) {
     // Generate random posit values
     posit8 p_a, p_b, p_c;
@@ -190,7 +182,6 @@ TEST(Posit8Arithmetic, MulSub) {
 
 // Test negative fused multiply-add operation (c-a*b)
 TEST(Posit8Arithmetic, SubMul) {
-  current_operation = "Negative Fused Multiply-Add";
   for (int i = 0; i < NTESTS8; i++) {
     // Generate random posit values
     posit8 p_a, p_b, p_c;

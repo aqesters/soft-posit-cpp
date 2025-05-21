@@ -4,7 +4,6 @@
 
 // Test for p8_exp function implementation
 TEST(Posit8MathFunctions, ExpFunction) {
-  current_operation = "Exponential Function";
 
   // Create a distribution that generates values across the full posit8 range
   std::uniform_int_distribution<uint8_t> full_dist(0, 0xFF);
@@ -41,7 +40,6 @@ TEST(Posit8MathFunctions, ExpFunction) {
 
 // Test specific known values for exponential function
 TEST(Posit8MathFunctions, ExpSpecificValues) {
-  current_operation = "Exponential Function Special Cases";
 
   // exp(0) = 1
   posit8 zero = posit8(0.0);
@@ -76,7 +74,6 @@ TEST(Posit8MathFunctions, ExpSpecificValues) {
 
 // Test the identity: e^(a+b) = e^a * e^b
 TEST(Posit8MathFunctions, ExpAdditiveProperty) {
-  current_operation = "Exponential Additive Property";
 
   // Create a distribution that generates values in a safe range to avoid
   // overflow
@@ -108,7 +105,6 @@ TEST(Posit8MathFunctions, ExpAdditiveProperty) {
 
 // // Test the identity: (e^a)^b = e^(a*b)
 // TEST(Posit8MathFunctions, ExpPowerProperty) {
-//   current_operation = "Exponential Power Property";
 
 //   // Create a distribution that generates values in a safe range to avoid
 //   // overflow

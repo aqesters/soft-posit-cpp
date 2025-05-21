@@ -4,7 +4,6 @@
 
 // Test for p8_ceil function implementation
 TEST(Posit8MathFunctions, CeilFunction) {
-  current_operation = "Ceiling Function";
 
   // Create a distribution that generates values across the full posit8 range
   std::uniform_int_distribution<uint8_t> full_dist(0, 0xFF);
@@ -36,7 +35,6 @@ TEST(Posit8MathFunctions, CeilFunction) {
 
 // Test specific known values for ceiling function
 TEST(Posit8MathFunctions, CeilSpecificValues) {
-  current_operation = "Ceiling Function Special Cases";
 
   // ceil(1.0) = 1.0
   posit8 p_one = posit8(1.0);
@@ -74,7 +72,6 @@ TEST(Posit8MathFunctions, CeilSpecificValues) {
 
 // Test for p8_floor function implementation
 TEST(Posit8MathFunctions, FloorFunction) {
-  current_operation = "Floor Function";
 
   // Create a distribution that generates values across the full posit8 range
   std::uniform_int_distribution<uint8_t> full_dist(0, 0xFF);
@@ -106,7 +103,6 @@ TEST(Posit8MathFunctions, FloorFunction) {
 
 // Test specific known values for floor function
 TEST(Posit8MathFunctions, FloorSpecificValues) {
-  current_operation = "Floor Function Special Cases";
 
   // floor(1.0) = 1.0
   posit8 p_one = posit8(1.0);
@@ -143,7 +139,6 @@ TEST(Posit8MathFunctions, FloorSpecificValues) {
 
 // Test the relationship between ceil and floor
 TEST(Posit8MathFunctions, CeilFloorRelationship) {
-  current_operation = "Ceiling and Floor Relationship";
 
   // Create a distribution that generates non-integer values
   std::uniform_real_distribution<double> frac_dist(-10.0, 10.0);

@@ -4,7 +4,6 @@
 
 // Test for p8_ln function implementation
 TEST(Posit8MathFunctions, LnFunction) {
-  current_operation = "Natural Logarithm Function";
 
   // Create a distribution that generates values across the full posit8 range
   std::uniform_int_distribution<uint8_t> full_dist(0, 0xFF);
@@ -36,7 +35,6 @@ TEST(Posit8MathFunctions, LnFunction) {
 
 // Test specific known values for natural logarithm function
 TEST(Posit8MathFunctions, LnSpecificValues) {
-  current_operation = "Natural Logarithm Function Special Cases";
 
   // ln(1) = 0
   posit8 one = posit8(1.0);
@@ -73,7 +71,6 @@ TEST(Posit8MathFunctions, LnSpecificValues) {
 
 // Test for p8_log2 function implementation
 TEST(Posit8MathFunctions, Log2Function) {
-  current_operation = "Base-2 Logarithm Function";
 
   // Create a distribution that generates values across the full posit8 range
   std::uniform_int_distribution<uint8_t> full_dist(0, 0xFF);
@@ -105,7 +102,6 @@ TEST(Posit8MathFunctions, Log2Function) {
 
 // Test specific known values for base-2 logarithm function
 TEST(Posit8MathFunctions, Log2SpecificValues) {
-  current_operation = "Base-2 Logarithm Function Special Cases";
 
   // log2(1) = 0
   posit8 one = posit8(1.0);
@@ -149,7 +145,6 @@ TEST(Posit8MathFunctions, Log2SpecificValues) {
 
 // Test the identity: ln(a*b) = ln(a) + ln(b)
 TEST(Posit8MathFunctions, LnMultiplicativeProperty) {
-  current_operation = "Natural Logarithm Multiplicative Property";
 
   // Create a distribution that generates positive values in a safe range
   std::uniform_real_distribution<double> safe_dist(0.5, 2.0);

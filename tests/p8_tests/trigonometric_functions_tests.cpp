@@ -4,7 +4,6 @@
 
 // Test for p8_sin_pi function implementation
 TEST(Posit8MathFunctions, SinPiFunction) {
-  current_operation = "Sine Function (sin(π*x))";
 
   // Create a distribution that generates values across the full posit8 range
   std::uniform_int_distribution<uint8_t> full_dist(0, 0xFF);
@@ -36,7 +35,6 @@ TEST(Posit8MathFunctions, SinPiFunction) {
 
 // Test specific known values for sin_pi function
 TEST(Posit8MathFunctions, SinPiSpecificValues) {
-  current_operation = "Sine Function (sin(π*x)) Special Cases";
 
   // sin(π*0) = sin(0) = 0
   posit8 zero = posit8(0.0);
@@ -75,7 +73,6 @@ TEST(Posit8MathFunctions, SinPiSpecificValues) {
 
 // Test for p8_cos_pi function implementation
 TEST(Posit8MathFunctions, CosPiFunction) {
-  current_operation = "Cosine Function (cos(π*x))";
 
   // Create a distribution that generates values across the full posit8 range
   std::uniform_int_distribution<uint8_t> full_dist(0, 0xFF);
@@ -107,7 +104,6 @@ TEST(Posit8MathFunctions, CosPiFunction) {
 
 // Test specific known values for cos_pi function
 TEST(Posit8MathFunctions, CosPiSpecificValues) {
-  current_operation = "Cosine Function (cos(π*x)) Special Cases";
 
   // cos(π*0) = cos(0) = 1
   posit8 zero = posit8(0.0);
@@ -140,7 +136,6 @@ TEST(Posit8MathFunctions, CosPiSpecificValues) {
 
 // Test for p8_tan_pi function implementation
 TEST(Posit8MathFunctions, TanPiFunction) {
-  current_operation = "Tangent Function (tan(π*x))";
 
   // Create a distribution that generates values across the full posit8 range
   std::uniform_int_distribution<uint8_t> full_dist(0, 0xFF);
@@ -184,7 +179,6 @@ TEST(Posit8MathFunctions, TanPiFunction) {
 
 // Test specific known values for tan_pi function
 TEST(Posit8MathFunctions, TanPiSpecificValues) {
-  current_operation = "Tangent Function (tan(π*x)) Special Cases";
 
   // tan(π*0) = tan(0) = 0
   posit8 zero = posit8(0.0);
@@ -223,7 +217,6 @@ TEST(Posit8MathFunctions, TanPiSpecificValues) {
 
 // Test Pythagorean identity: sin²(π*x) + cos²(π*x) = 1
 TEST(Posit8MathFunctions, PythagoreanIdentity) {
-  current_operation = "Pythagorean Identity";
 
   // Create a distribution that generates values across a reasonable range
   std::uniform_real_distribution<double> dist(-0.9, 0.9);

@@ -4,7 +4,6 @@
 
 // Test that adding and then subtracting the same value returns the original
 TEST(Posit32Advanced, AddSubCancel) {
-  current_operation = "Add-Sub Cancellation";
 
   // Create a distribution that generates values in the range [-MAX/2, MAX/2]
   std::uniform_int_distribution<int32_t> safe_dist(INT32_MIN / 2,
@@ -35,7 +34,6 @@ TEST(Posit32Advanced, AddSubCancel) {
 // Test that multiplying and then dividing by the same value returns the
 // original
 TEST(Posit32Advanced, MulDivCancel) {
-  current_operation = "Mul-Div Cancellation";
 
   // Create a distribution that generates values in the range [-MAX/2, MAX/2]
   std::uniform_int_distribution<int32_t> safe_dist(INT32_MIN / 2,
@@ -66,7 +64,6 @@ TEST(Posit32Advanced, MulDivCancel) {
 
 // Test specific properties of posit32 arithmetic
 TEST(Posit32Advanced, DistributiveProperty) {
-  current_operation = "Distributive Property";
 
   // Create a distribution that generates values in the range [-MAX/4, MAX/4]
   // Using smaller values to avoid overflow
@@ -104,7 +101,6 @@ TEST(Posit32Advanced, DistributiveProperty) {
 
 // Test for subnormal values handling
 TEST(Posit32Advanced, SubnormalHandling) {
-  current_operation = "Subnormal Values";
 
   // Test with very small positive values
   posit32 min_positive = posit32().minpos();

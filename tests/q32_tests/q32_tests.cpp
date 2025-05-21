@@ -4,7 +4,6 @@
 
 // Test for quire_mul_add
 TEST(Quire32Operations, MulAdd) {
-  current_operation = "Quire Multiply-Add";
   for (int i = 0; i < NTESTS32; i++) {
     // Generate random posit values
     posit32 p_a, p_b, p_c;
@@ -43,7 +42,6 @@ TEST(Quire32Operations, MulAdd) {
 
 // Test for quire_mul_sub
 TEST(Quire32Operations, MulSub) {
-  current_operation = "Quire Multiply-Subtract";
   for (int i = 0; i < NTESTS32; i++) {
     // Generate random posit values
     posit32 p_a, p_b, p_c;
