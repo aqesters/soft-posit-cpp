@@ -23,7 +23,7 @@ TEST(Posit8Advanced, AddSubCancel) {
     posit8 original = sum - p_b;
 
     // Allow a slightly higher tolerance for posit8
-    EXPECT_TRUE(double_eq(original.toDouble(), p_a.toDouble(), 1e-12, 1e-1))
+    EXPECT_TRUE(double_eq(original.toDouble(), p_a.toDouble(), 1e-1))
         << "Failed: (" << p_a.toDouble() << " + " << p_b.toDouble() << ") - "
         << p_b.toDouble() << " = " << original.toDouble() << " but expected "
         << p_a.toDouble();
@@ -35,7 +35,8 @@ TEST(Posit8Advanced, AddSubCancel) {
 // TEST(Posit8Advanced, MulDivCancel) {
 
 //   // Create a distribution that generates values in the range [-MAX/2, MAX/2]
-//   std::uniform_int_distribution<int8_t> safe_dist(INT8_MIN / 2, INT8_MAX / 2);
+//   std::uniform_int_distribution<int8_t> safe_dist(INT8_MIN / 2, INT8_MAX /
+//   2);
 
 //   for (int i = 0; i < NTESTS8 / 10; i++) { // Reduced iteration count
 //     posit8 p_a, p_b;
@@ -53,7 +54,7 @@ TEST(Posit8Advanced, AddSubCancel) {
 //     posit8 original = product / p_b;
 
 //     // Allow a slightly higher tolerance for posit8
-//     EXPECT_TRUE(double_eq(original.toDouble(), p_a.toDouble(), 1e-12, 1e-1))
+//     EXPECT_TRUE(double_eq(original.toDouble(), p_a.toDouble(), 1e-1))
 //         << "Failed: (" << p_a.toDouble() << " * " << p_b.toDouble() << ") / "
 //         << p_b.toDouble() << " = " << original.toDouble() << " but expected "
 //         << p_a.toDouble();
@@ -102,4 +103,4 @@ TEST(Posit8Advanced, SubnormalHandling) {
   // Should not be zero
   EXPECT_NE(half_max_neg.value, 0)
       << "Half of minneg became zero, expected a small negative value";
-} 
+}

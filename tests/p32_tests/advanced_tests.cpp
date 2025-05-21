@@ -24,7 +24,7 @@ TEST(Posit32Advanced, AddSubCancel) {
     posit32 original = sum - p_b;
 
     // Allow a slightly higher tolerance for posit32
-    ASSERT_TRUE(double_eq(original.toDouble(), p_a.toDouble(), 1e-12, 1e-1))
+    ASSERT_TRUE(double_eq(original.toDouble(), p_a.toDouble(), 1e-1))
         << "Failed: (" << p_a.toDouble() << " + " << p_b.toDouble() << ") - "
         << p_b.toDouble() << " = " << original.toDouble() << " but expected "
         << p_a.toDouble();
@@ -55,7 +55,7 @@ TEST(Posit32Advanced, MulDivCancel) {
     posit32 original = product / p_b;
 
     // Allow a slightly higher tolerance for posit32
-    ASSERT_TRUE(double_eq(original.toDouble(), p_a.toDouble(), 1e-12, 1e-1))
+    ASSERT_TRUE(double_eq(original.toDouble(), p_a.toDouble(), 1e-1))
         << "Failed: (" << p_a.toDouble() << " * " << p_b.toDouble() << ") / "
         << p_b.toDouble() << " = " << original.toDouble() << " but expected "
         << p_a.toDouble();
@@ -88,8 +88,7 @@ TEST(Posit32Advanced, DistributiveProperty) {
     posit32 right_side = (p_a * p_b) + (p_a * p_c);
 
     // Allow a slightly higher tolerance for posit32 in complex operations
-    ASSERT_TRUE(
-        double_eq(left_side.toDouble(), right_side.toDouble(), 1e-12, 1e-1))
+    ASSERT_TRUE(double_eq(left_side.toDouble(), right_side.toDouble(), 1e-1))
         << "Distributive property failed: " << p_a.toDouble() << " * ("
         << p_b.toDouble() << " + " << p_c.toDouble()
         << ") = " << left_side.toDouble() << " but (" << p_a.toDouble() << " * "
@@ -97,7 +96,6 @@ TEST(Posit32Advanced, DistributiveProperty) {
         << ") = " << right_side.toDouble();
   }
 }
-
 
 // Test for subnormal values handling
 TEST(Posit32Advanced, SubnormalHandling) {

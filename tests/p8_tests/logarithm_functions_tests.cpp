@@ -24,8 +24,7 @@ TEST(Posit8MathFunctions, LnFunction) {
     posit8 p_expected = posit8(f_result);
 
     // Allow small differences due to rounding
-    ASSERT_TRUE(
-        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 1e-1))
+    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-1))
         << "Failed ln: ln(" << p_a.toDouble() << ") = " << p_result.toDouble()
         << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
         << (int)p_a.value << " -> 0x" << (int)p_result.value << ", expected 0x"
@@ -91,11 +90,11 @@ TEST(Posit8MathFunctions, Log2Function) {
     posit8 p_expected = posit8(f_result);
 
     // Allow small differences due to rounding
-    ASSERT_TRUE(
-        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 1e-1))
-        << "Failed log2: log2(" << p_a.toDouble() << ") = " << p_result.toDouble()
-        << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
-        << (int)p_a.value << " -> 0x" << (int)p_result.value << ", expected 0x"
+    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-1))
+        << "Failed log2: log2(" << p_a.toDouble()
+        << ") = " << p_result.toDouble() << " but expected "
+        << p_expected.toDouble() << " (hex: 0x" << std::hex << (int)p_a.value
+        << " -> 0x" << (int)p_result.value << ", expected 0x"
         << (int)p_expected.value << ")";
   }
 }
@@ -166,9 +165,9 @@ TEST(Posit8MathFunctions, LnMultiplicativeProperty) {
     posit8 sum = ln_a + ln_b;
 
     // Allow slightly higher tolerance for this complex operation
-    ASSERT_TRUE(double_eq(ln_product.toDouble(), sum.toDouble(), 1e-12, 1e-1))
+    ASSERT_TRUE(double_eq(ln_product.toDouble(), sum.toDouble(), 1e-1))
         << "Failed: ln(" << p_a.toDouble() << " * " << p_b.toDouble()
         << ") = " << ln_product.toDouble() << " but ln(" << p_a.toDouble()
         << ") + ln(" << p_b.toDouble() << ") = " << sum.toDouble();
   }
-} 
+}

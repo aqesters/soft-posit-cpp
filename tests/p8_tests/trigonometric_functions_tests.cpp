@@ -24,11 +24,11 @@ TEST(Posit8MathFunctions, SinPiFunction) {
     posit8 p_expected = posit8(f_result);
 
     // Allow small differences due to rounding
-    ASSERT_TRUE(
-        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 1e-1))
-        << "Failed sin_pi: sin(π*" << p_a.toDouble() << ") = " << p_result.toDouble()
-        << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
-        << (int)p_a.value << " -> 0x" << (int)p_result.value << ", expected 0x"
+    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-1))
+        << "Failed sin_pi: sin(π*" << p_a.toDouble()
+        << ") = " << p_result.toDouble() << " but expected "
+        << p_expected.toDouble() << " (hex: 0x" << std::hex << (int)p_a.value
+        << " -> 0x" << (int)p_result.value << ", expected 0x"
         << (int)p_expected.value << ")";
   }
 }
@@ -61,7 +61,8 @@ TEST(Posit8MathFunctions, SinPiSpecificValues) {
   posit8 neg_one = posit8(-1.0);
   posit8 result_neg_half = neg_half.sin_pi();
   ASSERT_EQ(result_neg_half.value, neg_one.value)
-      << "sin(π*(-0.5)) = " << result_neg_half.toDouble() << " but expected -1.0";
+      << "sin(π*(-0.5)) = " << result_neg_half.toDouble()
+      << " but expected -1.0";
 
   // NaR input should result in NaR
   posit8 p_nar;
@@ -93,11 +94,11 @@ TEST(Posit8MathFunctions, CosPiFunction) {
     posit8 p_expected = posit8(f_result);
 
     // Allow small differences due to rounding
-    ASSERT_TRUE(
-        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 1e-1))
-        << "Failed cos_pi: cos(π*" << p_a.toDouble() << ") = " << p_result.toDouble()
-        << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
-        << (int)p_a.value << " -> 0x" << (int)p_result.value << ", expected 0x"
+    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-1))
+        << "Failed cos_pi: cos(π*" << p_a.toDouble()
+        << ") = " << p_result.toDouble() << " but expected "
+        << p_expected.toDouble() << " (hex: 0x" << std::hex << (int)p_a.value
+        << " -> 0x" << (int)p_result.value << ", expected 0x"
         << (int)p_expected.value << ")";
   }
 }
@@ -151,7 +152,8 @@ TEST(Posit8MathFunctions, TanPiFunction) {
 
     double f_a = p_a.toDouble();
 
-    // Skip values where tan(π*x) is undefined (x = n + 0.5 where n is an integer)
+    // Skip values where tan(π*x) is undefined (x = n + 0.5 where n is an
+    // integer)
     double mod_value = std::fabs(f_a - std::round(f_a - 0.5));
     if (mod_value < 0.01) {
       continue;
@@ -168,11 +170,11 @@ TEST(Posit8MathFunctions, TanPiFunction) {
     }
 
     // Allow slightly higher tolerance for tangent due to higher sensitivity
-    ASSERT_TRUE(
-        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 2e-1))
-        << "Failed tan_pi: tan(π*" << p_a.toDouble() << ") = " << p_result.toDouble()
-        << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
-        << (int)p_a.value << " -> 0x" << (int)p_result.value << ", expected 0x"
+    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 2e-1))
+        << "Failed tan_pi: tan(π*" << p_a.toDouble()
+        << ") = " << p_result.toDouble() << " but expected "
+        << p_expected.toDouble() << " (hex: 0x" << std::hex << (int)p_a.value
+        << " -> 0x" << (int)p_result.value << ", expected 0x"
         << (int)p_expected.value << ")";
   }
 }
@@ -205,7 +207,8 @@ TEST(Posit8MathFunctions, TanPiSpecificValues) {
   posit8 neg_one = posit8(-1.0);
   posit8 result_neg_quarter = neg_quarter.tan_pi();
   ASSERT_EQ(result_neg_quarter.value, neg_one.value)
-      << "tan(π*(-0.25)) = " << result_neg_quarter.toDouble() << " but expected -1.0";
+      << "tan(π*(-0.25)) = " << result_neg_quarter.toDouble()
+      << " but expected -1.0";
 
   // NaR input should result in NaR
   posit8 p_nar;
@@ -238,8 +241,9 @@ TEST(Posit8MathFunctions, PythagoreanIdentity) {
     posit8 one = posit8(1.0);
 
     // Allow slightly higher tolerance for this identity check
-    ASSERT_TRUE(double_eq(sum.toDouble(), one.toDouble(), 1e-12, 2e-1))
-        << "Failed Pythagorean identity: sin²(π*" << p_a.toDouble() << ") + cos²(π*" 
-        << p_a.toDouble() << ") = " << sum.toDouble() << " but expected 1.0";
+    ASSERT_TRUE(double_eq(sum.toDouble(), one.toDouble(), 2e-1))
+        << "Failed Pythagorean identity: sin²(π*" << p_a.toDouble()
+        << ") + cos²(π*" << p_a.toDouble() << ") = " << sum.toDouble()
+        << " but expected 1.0";
   }
-} 
+}

@@ -24,11 +24,11 @@ TEST(Posit8MathFunctions, CeilFunction) {
     posit8 p_expected = posit8(f_result);
 
     // Allow small differences due to rounding
-    ASSERT_TRUE(
-        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 1e-1))
-        << "Failed ceil: ceil(" << p_a.toDouble() << ") = " << p_result.toDouble()
-        << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
-        << (int)p_a.value << " -> 0x" << (int)p_result.value << ", expected 0x"
+    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-1))
+        << "Failed ceil: ceil(" << p_a.toDouble()
+        << ") = " << p_result.toDouble() << " but expected "
+        << p_expected.toDouble() << " (hex: 0x" << std::hex << (int)p_a.value
+        << " -> 0x" << (int)p_result.value << ", expected 0x"
         << (int)p_expected.value << ")";
   }
 }
@@ -54,7 +54,8 @@ TEST(Posit8MathFunctions, CeilSpecificValues) {
   posit8 p_neg_one = posit8(-1.0);
   posit8 result_neg_one_five = p_neg_one_point_five.ceil();
   ASSERT_EQ(result_neg_one_five.value, p_neg_one.value)
-      << "ceil(-1.5) = " << result_neg_one_five.toDouble() << " but expected -1.0";
+      << "ceil(-1.5) = " << result_neg_one_five.toDouble()
+      << " but expected -1.0";
 
   // ceil(0.0) = 0.0
   posit8 p_zero = posit8(0.0);
@@ -92,11 +93,11 @@ TEST(Posit8MathFunctions, FloorFunction) {
     posit8 p_expected = posit8(f_result);
 
     // Allow small differences due to rounding
-    ASSERT_TRUE(
-        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 1e-1))
-        << "Failed floor: floor(" << p_a.toDouble() << ") = " << p_result.toDouble()
-        << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
-        << (int)p_a.value << " -> 0x" << (int)p_result.value << ", expected 0x"
+    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-1))
+        << "Failed floor: floor(" << p_a.toDouble()
+        << ") = " << p_result.toDouble() << " but expected "
+        << p_expected.toDouble() << " (hex: 0x" << std::hex << (int)p_a.value
+        << " -> 0x" << (int)p_result.value << ", expected 0x"
         << (int)p_expected.value << ")";
   }
 }
@@ -121,7 +122,8 @@ TEST(Posit8MathFunctions, FloorSpecificValues) {
   posit8 p_neg_two = posit8(-2.0);
   posit8 result_neg_one_five = p_neg_one_point_five.floor();
   ASSERT_EQ(result_neg_one_five.value, p_neg_two.value)
-      << "floor(-1.5) = " << result_neg_one_five.toDouble() << " but expected -2.0";
+      << "floor(-1.5) = " << result_neg_one_five.toDouble()
+      << " but expected -2.0";
 
   // floor(0.0) = 0.0
   posit8 p_zero = posit8(0.0);
@@ -148,31 +150,32 @@ TEST(Posit8MathFunctions, CeilFloorRelationship) {
     double f_a = frac_dist(gen);
     // Make sure it's not an integer by adding a non-integer part
     f_a += 0.3;
-    
+
     posit8 p_a = posit8(f_a);
-    
+
     // Calculate ceil(x) and floor(x)
     posit8 ceil_result = p_a.ceil();
     posit8 floor_result = p_a.floor();
-    
+
     // For non-integer values, ceil(x) - floor(x) should be 1
     // For integer values, ceil(x) - floor(x) should be 0
     double difference = ceil_result.toDouble() - floor_result.toDouble();
-    
+
     // If the original value was close to an integer due to posit precision,
     // the difference might be 0
-    bool is_close_to_integer = std::abs(p_a.toDouble() - std::round(p_a.toDouble())) < 1e-3;
-    
+    bool is_close_to_integer =
+        std::abs(p_a.toDouble() - std::round(p_a.toDouble())) < 1e-3;
+
     if (is_close_to_integer) {
       ASSERT_TRUE(difference == 0.0)
-          << "For integer-like value " << p_a.toDouble() 
-          << ", ceil(" << p_a.toDouble() << ") - floor(" << p_a.toDouble() 
+          << "For integer-like value " << p_a.toDouble() << ", ceil("
+          << p_a.toDouble() << ") - floor(" << p_a.toDouble()
           << ") = " << difference << " but expected 0";
     } else {
       ASSERT_TRUE(difference == 1.0)
-          << "For non-integer value " << p_a.toDouble() 
-          << ", ceil(" << p_a.toDouble() << ") - floor(" << p_a.toDouble() 
+          << "For non-integer value " << p_a.toDouble() << ", ceil("
+          << p_a.toDouble() << ") - floor(" << p_a.toDouble()
           << ") = " << difference << " but expected 1";
     }
   }
-} 
+}

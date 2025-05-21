@@ -34,8 +34,7 @@ extern std::uniform_int_distribution<int16_t> int_dist16;
 extern std::uniform_int_distribution<int32_t> int_dist32;
 
 // Compare doubles with epsilon tolerance
-bool double_eq(double a, double b, double epsilon_min = 1e-12,
-               double epsilon_max = 1e-5);
+bool double_eq(double a, double b, double epsilon_max = 1e-5);
 
 // Templated generic exact test function for posit operations
 template <typename PositType>
@@ -81,7 +80,8 @@ template <typename PositType>
 auto ulp(PositType x, PositType y) -> decltype(x.value) {
   // Cast to the appropriate type to avoid ambiguity with std::abs
   using ValueType = decltype(x.value);
-  return static_cast<ValueType>(std::abs(static_cast<int64_t>(x.value) - static_cast<int64_t>(y.value)));
+  return static_cast<ValueType>(
+      std::abs(static_cast<int64_t>(x.value) - static_cast<int64_t>(y.value)));
 }
 
 #endif // SOFTPOSIT_COMMON_TEST_UTILS_H

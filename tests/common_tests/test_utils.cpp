@@ -14,7 +14,7 @@ std::uniform_int_distribution<int16_t> int_dist16(INT16_MIN, INT16_MAX);
 std::uniform_int_distribution<int32_t> int_dist32(INT32_MIN, INT32_MAX);
 
 // Compare doubles with epsilon tolerance
-bool double_eq(double a, double b, double /*epsilon_min*/, double epsilon_max) {
+bool double_eq(double a, double b, double epsilon_max) {
   // Special case: If both values are NaN, consider them equal
   if (std::isnan(a) && std::isnan(b)) {
     return true;

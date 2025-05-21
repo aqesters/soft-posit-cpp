@@ -5,7 +5,8 @@
 // Test for p8_asin_pi function implementation
 TEST(Posit8MathFunctions, AsinPiFunction) {
 
-  // Create a distribution that generates values in the valid range for asin [-1, 1]
+  // Create a distribution that generates values in the valid range for asin
+  // [-1, 1]
   std::uniform_real_distribution<double> valid_dist(-0.99, 0.99);
 
   for (int i = 0; i < NTESTS8; i++) {
@@ -18,11 +19,11 @@ TEST(Posit8MathFunctions, AsinPiFunction) {
     posit8 p_expected = posit8(f_result);
 
     // Allow small differences due to rounding
-    ASSERT_TRUE(
-        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 1e-1))
-        << "Failed asin_pi: asin(" << p_a.toDouble() << ")/π = " << p_result.toDouble()
-        << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
-        << (int)p_a.value << " -> 0x" << (int)p_result.value << ", expected 0x"
+    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-1))
+        << "Failed asin_pi: asin(" << p_a.toDouble()
+        << ")/π = " << p_result.toDouble() << " but expected "
+        << p_expected.toDouble() << " (hex: 0x" << std::hex << (int)p_a.value
+        << " -> 0x" << (int)p_result.value << ", expected 0x"
         << (int)p_expected.value << ")";
   }
 }
@@ -67,7 +68,8 @@ TEST(Posit8MathFunctions, AsinPiSpecificValues) {
 // Test for p8_acos_pi function implementation
 TEST(Posit8MathFunctions, AcosPiFunction) {
 
-  // Create a distribution that generates values in the valid range for acos [-1, 1]
+  // Create a distribution that generates values in the valid range for acos
+  // [-1, 1]
   std::uniform_real_distribution<double> valid_dist(-0.99, 0.99);
 
   for (int i = 0; i < NTESTS8; i++) {
@@ -80,11 +82,11 @@ TEST(Posit8MathFunctions, AcosPiFunction) {
     posit8 p_expected = posit8(f_result);
 
     // Allow small differences due to rounding
-    ASSERT_TRUE(
-        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 1e-1))
-        << "Failed acos_pi: acos(" << p_a.toDouble() << ")/π = " << p_result.toDouble()
-        << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
-        << (int)p_a.value << " -> 0x" << (int)p_result.value << ", expected 0x"
+    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-1))
+        << "Failed acos_pi: acos(" << p_a.toDouble()
+        << ")/π = " << p_result.toDouble() << " but expected "
+        << p_expected.toDouble() << " (hex: 0x" << std::hex << (int)p_a.value
+        << " -> 0x" << (int)p_result.value << ", expected 0x"
         << (int)p_expected.value << ")";
   }
 }
@@ -131,7 +133,8 @@ TEST(Posit8MathFunctions, AcosPiSpecificValues) {
 TEST(Posit8MathFunctions, AtanPiFunction) {
 
   // Create a distribution that generates values across a reasonable range
-  // atan is defined for all real values, but we'll use a limited range to avoid extreme values
+  // atan is defined for all real values, but we'll use a limited range to avoid
+  // extreme values
   std::uniform_real_distribution<double> safe_dist(-10.0, 10.0);
 
   for (int i = 0; i < NTESTS8; i++) {
@@ -144,11 +147,11 @@ TEST(Posit8MathFunctions, AtanPiFunction) {
     posit8 p_expected = posit8(f_result);
 
     // Allow small differences due to rounding
-    ASSERT_TRUE(
-        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 1e-1))
-        << "Failed atan_pi: atan(" << p_a.toDouble() << ")/π = " << p_result.toDouble()
-        << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
-        << (int)p_a.value << " -> 0x" << (int)p_result.value << ", expected 0x"
+    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-1))
+        << "Failed atan_pi: atan(" << p_a.toDouble()
+        << ")/π = " << p_result.toDouble() << " but expected "
+        << p_expected.toDouble() << " (hex: 0x" << std::hex << (int)p_a.value
+        << " -> 0x" << (int)p_result.value << ", expected 0x"
         << (int)p_expected.value << ")";
   }
 }
@@ -197,13 +200,14 @@ TEST(Posit8MathFunctions, SinAsinInverse) {
 
     // Calculate sin(π*x)
     posit8 sin_result = p_a.sin_pi();
-    
+
     // Calculate asin(sin(π*x))/π - should get back x
     posit8 asin_result = sin_result.asin_pi();
 
     // Allow slightly higher tolerance for this composite operation
-    ASSERT_TRUE(double_eq(asin_result.toDouble(), p_a.toDouble(), 1e-12, 2e-1))
-        << "Failed inverse relationship: asin(sin(π*" << p_a.toDouble() << "))/π = " 
-        << asin_result.toDouble() << " but expected " << p_a.toDouble();
+    ASSERT_TRUE(double_eq(asin_result.toDouble(), p_a.toDouble(), 2e-1))
+        << "Failed inverse relationship: asin(sin(π*" << p_a.toDouble()
+        << "))/π = " << asin_result.toDouble() << " but expected "
+        << p_a.toDouble();
   }
-} 
+}

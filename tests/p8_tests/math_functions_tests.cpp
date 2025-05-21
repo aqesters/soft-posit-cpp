@@ -29,8 +29,7 @@ TEST(Posit8MathFunctions, ExpFunction) {
     }
 
     // Allow small differences due to rounding
-    ASSERT_TRUE(
-        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 1e-1))
+    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-1))
         << "Failed exp: exp(" << p_a.toDouble() << ") = " << p_result.toDouble()
         << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
         << (int)p_a.value << " -> 0x" << (int)p_result.value << ", expected 0x"
@@ -96,7 +95,7 @@ TEST(Posit8MathFunctions, ExpAdditiveProperty) {
     posit8 product = exp_a * exp_b;
 
     // Allow slightly higher tolerance for this complex operation
-    ASSERT_TRUE(double_eq(exp_sum.toDouble(), product.toDouble(), 1e-12, 1e-1))
+    ASSERT_TRUE(double_eq(exp_sum.toDouble(), product.toDouble(), 1e-1))
         << "Failed: exp(" << p_a.toDouble() << " + " << p_b.toDouble()
         << ") = " << exp_sum.toDouble() << " but exp(" << p_a.toDouble()
         << ") * exp(" << p_b.toDouble() << ") = " << product.toDouble();
@@ -133,9 +132,9 @@ TEST(Posit8MathFunctions, ExpAdditiveProperty) {
 
 //     // Allow higher tolerance for pow operations
 //     ASSERT_TRUE(
-//         double_eq(left_side.toDouble(), right_side.toDouble(), 1e-12, 1e-1))
+//         double_eq(left_side.toDouble(), right_side.toDouble(), 1e-1))
 //         << "Failed: (exp(" << p_a.toDouble() << "))^" << p_b.toDouble()
 //         << " = " << left_side.toDouble() << " but exp(" << p_a.toDouble()
 //         << " * " << p_b.toDouble() << ") = " << right_side.toDouble();
 //   }
-// } 
+// }
