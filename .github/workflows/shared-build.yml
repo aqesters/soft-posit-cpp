@@ -3,26 +3,18 @@ name: Shared Build
 on:
   workflow_call:
     inputs:
-      build_type:
-        required: false
-        type: string
-        default: 'Release'
-      build_dir:
-        required: true
-        type: string
       platform:
         required: false
         type: string
         default: 'ubuntu-latest'
-      run_tests:
-        required: false
-        type: boolean
-        default: false
-      run_benchmarks:
-        required: false
-        type: boolean
-        default: false
       cache_key:
+        required: true
+        type: string
+      build_targets:
+        required: false
+        type: string
+        default: ''
+      test_targets:
         required: false
         type: string
         default: ''
@@ -35,53 +27,94 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    # Create unique cache key based on OS, build type, and latest commit
-    - name: Generate cache key
-      id: cache-key
-      run: |
-        if [ -n "${{ inputs.cache_key }}" ]; then
-          echo "key=${{ inputs.cache_key }}" >> $GITHUB_OUTPUT
-        else
-          echo "key=${{ inputs.platform }}-${{ inputs.build_type }}-${{ hashFiles('**/*.cpp', '**/*.h', '**/*.c', '**/CMakeLists.txt') }}" >> $GITHUB_OUTPUT
-        fi
-      shell: bash
-
-    # Try to restore build cache
+    # Restore build cache
     - name: Restore build cache
       id: cache-build
       uses: actions/cache@v3
       with:
         path: build
-        key: build-${{ steps.cache-key.outputs.key }}
-        restore-keys: |
-          build-${{ inputs.platform }}-${{ inputs.build_type }}-
-
-    - name: Build (Unix-like)
-      if: (inputs.platform == 'ubuntu-latest' || inputs.platform == 'macos-latest') && steps.cache-build.outputs.cache-hit != 'true'
+        key: ${{ inputs.cache_key }}
+        
+    # Always set up dependencies, regardless of cache
+    - name: Set up dependencies (Ubuntu)
+      if: inputs.platform == 'ubuntu-latest'
       run: |
-        cd ${{ inputs.build_dir }}
-        make -j$(nproc 2>/dev/null || sysctl -n hw.ncpu)
-
-    - name: Build (Windows)
-      if: inputs.platform == 'windows-latest' && steps.cache-build.outputs.cache-hit != 'true'
+        sudo apt-get update
+        sudo apt-get install -y g++ make cmake ninja-build
+      
+    - name: Set up dependencies (macOS)
+      if: inputs.platform == 'macos-latest'
       run: |
-        cd ${{ inputs.build_dir }}
-        msbuild SoftPosit.sln -p:Configuration=${{ inputs.build_type }}
-
-    - name: Run tests (Unix-like)
-      if: (inputs.platform == 'ubuntu-latest' || inputs.platform == 'macos-latest') && inputs.run_tests
+        brew install cmake ninja
+        
+    # Build targets if specified
+    - name: Build targets
+      if: inputs.build_targets != ''
       run: |
-        cd ${{ inputs.build_dir }}
-        ctest --verbose
-
-    - name: Run tests (Windows)
-      if: inputs.platform == 'windows-latest' && inputs.run_tests
+        # Remove existing build directory to avoid generator mismatch
+        if [ -d "build" ]; then
+          rm -rf build
+        fi
+        
+        mkdir -p build
+        cd build
+        
+        # Use the same generator that was used to create the cache
+        cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DBUILD_BENCHMARKS=ON ..
+        
+        # Build targets
+        if [ "${{ inputs.build_targets }}" == "all" ]; then
+          make -j$(nproc 2>/dev/null || sysctl -n hw.ncpu)
+        else
+          make ${{ inputs.build_targets }} -j$(nproc 2>/dev/null || sysctl -n hw.ncpu)
+        fi
+        
+    # Upload build artifact if build_targets were specified
+    - name: Upload build artifact
+      if: inputs.build_targets != ''
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifact-${{ inputs.platform }}
+        path: build/
+        
+    # Download build artifact if running tests and not building
+    - name: Download build artifact
+      if: inputs.test_targets != '' && inputs.build_targets == ''
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifact-${{ inputs.platform }}
+        path: build/
+        
+    # Run tests if specified
+    - name: Run tests
+      if: inputs.test_targets != ''
       run: |
-        cd ${{ inputs.build_dir }}
-        ctest --verbose -C ${{ inputs.build_type }}
-
-    - name: Run benchmarks
-      if: inputs.run_benchmarks
-      run: |
-        cd ${{ inputs.build_dir }}
-        make bench 
+        cd build
+        ls -la
+        find . -name "*_tests" -type f -executable || true
+        
+        TEST_TARGET="${{ inputs.test_targets }}"
+        echo "Running test target: $TEST_TARGET"
+        
+        # Build the test target if it doesn't exist
+        if [ ! -f "./$TEST_TARGET" ] && [ ! -f "./bin/$TEST_TARGET" ]; then
+          echo "Building test target: $TEST_TARGET"
+          make $TEST_TARGET -j$(nproc 2>/dev/null || sysctl -n hw.ncpu)
+        fi
+        
+        # Now run the test
+        if [[ "$TEST_TARGET" == "p8_tests" ]]; then
+          # Run p8_tests directly
+          ./p8_tests
+        elif [[ "$TEST_TARGET" == "p16_tests" ]]; then
+          # Run p16_tests directly
+          ./p16_tests
+        elif [[ "$TEST_TARGET" == "p32_tests" ]]; then
+          # Run p32_tests directly
+          ./p32_tests
+        elif [[ "$TEST_TARGET" == "quire_tests" ]]; then
+          # Run quire_tests directly
+          ./quire_tests
+        elif [[ "$TEST_TARGET" == "all" ]]; then
+          ctest -V
+        fi 

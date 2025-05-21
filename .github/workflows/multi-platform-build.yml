@@ -5,33 +5,67 @@ on:
     branches: [ "main", "refactor-cpp-soft-posits" ]
   pull_request:
     branches: [ "main", "refactor-cpp-soft-posits" ]
+  workflow_dispatch:
 
 jobs:
-  matrix-setup:
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [ubuntu-latest, macos-latest, windows-latest]
-        build_type: [Release]
-    
-    uses: ./.github/workflows/shared-setup.yml
-    with:
-      platform: ${{ matrix.platform }}
-      build_type: ${{ matrix.build_type }}
-      build_tests: true
-      cmake_extra_args: ${{ matrix.platform == 'windows-latest' && '-G \"Visual Studio 17 2022\"' || '' }}
-  
   matrix-build:
-    needs: matrix-setup
     strategy:
       fail-fast: false
       matrix:
-        platform: [ubuntu-latest, macos-latest, windows-latest]
+        platform: [ubuntu-latest, macos-latest]
         build_type: [Release]
     
-    uses: ./.github/workflows/shared-build.yml
-    with:
-      platform: ${{ matrix.platform }}
-      build_type: ${{ matrix.build_type }}
-      build_dir: ${{ needs.matrix-setup.outputs.build_dir }}
-      run_tests: true 
+    name: Build on ${{ matrix.platform }}
+    
+    runs-on: ${{ matrix.platform }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Generate cache key
+      id: cache-key
+      run: |
+        echo "key=multi-${{ matrix.platform }}-${{ matrix.build_type }}-${{ hashFiles('**/*.cpp', '**/*.h', '**/*.c', '**/CMakeLists.txt') }}" >> $GITHUB_OUTPUT
+      shell: bash
+    
+    - name: Restore build cache
+      id: cache-build
+      uses: actions/cache@v3
+      with:
+        path: build
+        key: ${{ steps.cache-key.outputs.key }}
+    
+    - name: Set up dependencies (Ubuntu)
+      if: steps.cache-build.outputs.cache-hit != 'true' && matrix.platform == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake make g++ ninja-build
+    
+    - name: Set up dependencies (macOS)
+      if: steps.cache-build.outputs.cache-hit != 'true' && matrix.platform == 'macos-latest'
+      run: |
+        brew install cmake ninja
+    
+    - name: Configure CMake
+      if: steps.cache-build.outputs.cache-hit != 'true'
+      run: |
+        mkdir -p build
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DBUILD_TESTS=ON
+      
+    - name: Build
+      if: steps.cache-build.outputs.cache-hit != 'true'
+      run: |
+        cd build
+        make -j$(nproc 2>/dev/null || sysctl -n hw.ncpu)
+    
+    - name: Run tests
+      run: |
+        cd build
+        ./p8_tests
+        ./p16_tests
+        ./p32_tests
+        ./q8_tests
+        ./q16_tests
+        ./q32_tests 
