@@ -4,6 +4,7 @@
 
 // Test for p8_ln function implementation
 TEST(Posit8MathFunctions, LnFunction) {
+  current_operation = "Natural Logarithm Function";
 
   // Create a distribution that generates values across the full posit8 range
   std::uniform_int_distribution<uint8_t> full_dist(0, 0xFF);
@@ -24,7 +25,8 @@ TEST(Posit8MathFunctions, LnFunction) {
     posit8 p_expected = posit8(f_result);
 
     // Allow small differences due to rounding
-    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-1))
+    ASSERT_TRUE(
+        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 1e-1))
         << "Failed ln: ln(" << p_a.toDouble() << ") = " << p_result.toDouble()
         << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
         << (int)p_a.value << " -> 0x" << (int)p_result.value << ", expected 0x"
@@ -34,6 +36,7 @@ TEST(Posit8MathFunctions, LnFunction) {
 
 // Test specific known values for natural logarithm function
 TEST(Posit8MathFunctions, LnSpecificValues) {
+  current_operation = "Natural Logarithm Function Special Cases";
 
   // ln(1) = 0
   posit8 one = posit8(1.0);
@@ -69,8 +72,8 @@ TEST(Posit8MathFunctions, LnSpecificValues) {
 }
 
 // Test for p8_log2 function implementation
-#ifdef ENABLE_EXPERIMENTAL_TESTS
 TEST(Posit8MathFunctions, Log2Function) {
+  current_operation = "Base-2 Logarithm Function";
 
   // Create a distribution that generates values across the full posit8 range
   std::uniform_int_distribution<uint8_t> full_dist(0, 0xFF);
@@ -91,19 +94,18 @@ TEST(Posit8MathFunctions, Log2Function) {
     posit8 p_expected = posit8(f_result);
 
     // Allow small differences due to rounding
-    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-1))
-        << "Failed log2: log2(" << p_a.toDouble()
-        << ") = " << p_result.toDouble() << " but expected "
-        << p_expected.toDouble() << " (hex: 0x" << std::hex << (int)p_a.value
-        << " -> 0x" << (int)p_result.value << ", expected 0x"
+    ASSERT_TRUE(
+        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 1e-1))
+        << "Failed log2: log2(" << p_a.toDouble() << ") = " << p_result.toDouble()
+        << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
+        << (int)p_a.value << " -> 0x" << (int)p_result.value << ", expected 0x"
         << (int)p_expected.value << ")";
   }
 }
-#endif
 
 // Test specific known values for base-2 logarithm function
-#ifdef ENABLE_EXPERIMENTAL_TESTS
 TEST(Posit8MathFunctions, Log2SpecificValues) {
+  current_operation = "Base-2 Logarithm Function Special Cases";
 
   // log2(1) = 0
   posit8 one = posit8(1.0);
@@ -144,10 +146,10 @@ TEST(Posit8MathFunctions, Log2SpecificValues) {
   ASSERT_TRUE(result_neg.isNaR())
       << "log2(-1) = " << result_neg.toDouble() << " but expected NaR";
 }
-#endif
 
 // Test the identity: ln(a*b) = ln(a) + ln(b)
 TEST(Posit8MathFunctions, LnMultiplicativeProperty) {
+  current_operation = "Natural Logarithm Multiplicative Property";
 
   // Create a distribution that generates positive values in a safe range
   std::uniform_real_distribution<double> safe_dist(0.5, 2.0);
@@ -169,9 +171,9 @@ TEST(Posit8MathFunctions, LnMultiplicativeProperty) {
     posit8 sum = ln_a + ln_b;
 
     // Allow slightly higher tolerance for this complex operation
-    ASSERT_TRUE(double_eq(ln_product.toDouble(), sum.toDouble(), 1e-1))
+    ASSERT_TRUE(double_eq(ln_product.toDouble(), sum.toDouble(), 1e-12, 1e-1))
         << "Failed: ln(" << p_a.toDouble() << " * " << p_b.toDouble()
         << ") = " << ln_product.toDouble() << " but ln(" << p_a.toDouble()
         << ") + ln(" << p_b.toDouble() << ") = " << sum.toDouble();
   }
-}
+} 

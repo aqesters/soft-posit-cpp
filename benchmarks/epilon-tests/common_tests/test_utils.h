@@ -7,6 +7,8 @@
 #include <functional>
 #include <gtest/gtest.h>
 #include <iostream>
+#include <map>
+#include <numeric>
 #include <random>
 #include <vector>
 
@@ -33,8 +35,32 @@ extern std::uniform_int_distribution<int16_t> int_dist16;
 // Random distributions for p32 tests
 extern std::uniform_int_distribution<int32_t> int_dist32;
 
+// Current operation being tested
+extern std::string current_operation;
+
+// Global vector to store all epsilon values
+extern std::vector<double> all_epsilons;
+
+// Map to store epsilon values for each operation
+extern std::map<std::string, std::vector<double>> operation_epsilons;
+
+// Function to calculate the smallest epsilon that makes a and b equal
+double find_smallest_epsilon(double a, double b, double epsilon_min = 1e-12,
+                             double epsilon_max = 1e-5);
+
 // Compare doubles with epsilon tolerance
-bool double_eq(double a, double b, double epsilon_max = 1e-5);
+bool double_eq(double a, double b, double epsilon_min = 1e-12,
+               double epsilon_max = 1e-5);
+
+// Function to calculate and print statistics for a vector of epsilon values
+void printEpsilonStats(const std::string &label,
+                       const std::vector<double> &epsilons);
+
+// Class for epsilon statistics
+class EpsilonStatisticsPrinter : public ::testing::EmptyTestEventListener {
+public:
+  virtual void OnTestProgramEnd(const ::testing::UnitTest &unit_test);
+};
 
 // Templated generic exact test function for posit operations
 template <typename PositType>
@@ -80,8 +106,7 @@ template <typename PositType>
 auto ulp(PositType x, PositType y) -> decltype(x.value) {
   // Cast to the appropriate type to avoid ambiguity with std::abs
   using ValueType = decltype(x.value);
-  return static_cast<ValueType>(
-      std::abs(static_cast<int64_t>(x.value) - static_cast<int64_t>(y.value)));
+  return static_cast<ValueType>(std::abs(static_cast<int64_t>(x.value) - static_cast<int64_t>(y.value)));
 }
 
 #endif // SOFTPOSIT_COMMON_TEST_UTILS_H

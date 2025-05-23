@@ -4,6 +4,7 @@
 
 // Test for p8_sin_pi function implementation
 TEST(Posit8MathFunctions, SinPiFunction) {
+  current_operation = "Sine Function (sin(π*x))";
 
   // Create a distribution that generates values across the full posit8 range
   std::uniform_int_distribution<uint8_t> full_dist(0, 0xFF);
@@ -24,18 +25,18 @@ TEST(Posit8MathFunctions, SinPiFunction) {
     posit8 p_expected = posit8(f_result);
 
     // Allow small differences due to rounding
-    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-1))
-        << "Failed sin_pi: sin(π*" << p_a.toDouble()
-        << ") = " << p_result.toDouble() << " but expected "
-        << p_expected.toDouble() << " (hex: 0x" << std::hex << (int)p_a.value
-        << " -> 0x" << (int)p_result.value << ", expected 0x"
+    ASSERT_TRUE(
+        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 1e-1))
+        << "Failed sin_pi: sin(π*" << p_a.toDouble() << ") = " << p_result.toDouble()
+        << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
+        << (int)p_a.value << " -> 0x" << (int)p_result.value << ", expected 0x"
         << (int)p_expected.value << ")";
   }
 }
 
 // Test specific known values for sin_pi function
-#ifdef ENABLE_EXPERIMENTAL_TESTS
 TEST(Posit8MathFunctions, SinPiSpecificValues) {
+  current_operation = "Sine Function (sin(π*x)) Special Cases";
 
   // sin(π*0) = sin(0) = 0
   posit8 zero = posit8(0.0);
@@ -62,8 +63,7 @@ TEST(Posit8MathFunctions, SinPiSpecificValues) {
   posit8 neg_one = posit8(-1.0);
   posit8 result_neg_half = neg_half.sin_pi();
   ASSERT_EQ(result_neg_half.value, neg_one.value)
-      << "sin(π*(-0.5)) = " << result_neg_half.toDouble()
-      << " but expected -1.0";
+      << "sin(π*(-0.5)) = " << result_neg_half.toDouble() << " but expected -1.0";
 
   // NaR input should result in NaR
   posit8 p_nar;
@@ -72,10 +72,10 @@ TEST(Posit8MathFunctions, SinPiSpecificValues) {
   ASSERT_TRUE(result_nar.isNaR())
       << "sin_pi(NaR) = " << result_nar.toDouble() << " but expected NaR";
 }
-#endif
 
 // Test for p8_cos_pi function implementation
 TEST(Posit8MathFunctions, CosPiFunction) {
+  current_operation = "Cosine Function (cos(π*x))";
 
   // Create a distribution that generates values across the full posit8 range
   std::uniform_int_distribution<uint8_t> full_dist(0, 0xFF);
@@ -96,18 +96,18 @@ TEST(Posit8MathFunctions, CosPiFunction) {
     posit8 p_expected = posit8(f_result);
 
     // Allow small differences due to rounding
-    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-1))
-        << "Failed cos_pi: cos(π*" << p_a.toDouble()
-        << ") = " << p_result.toDouble() << " but expected "
-        << p_expected.toDouble() << " (hex: 0x" << std::hex << (int)p_a.value
-        << " -> 0x" << (int)p_result.value << ", expected 0x"
+    ASSERT_TRUE(
+        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 1e-1))
+        << "Failed cos_pi: cos(π*" << p_a.toDouble() << ") = " << p_result.toDouble()
+        << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
+        << (int)p_a.value << " -> 0x" << (int)p_result.value << ", expected 0x"
         << (int)p_expected.value << ")";
   }
 }
 
 // Test specific known values for cos_pi function
-#ifdef ENABLE_EXPERIMENTAL_TESTS
 TEST(Posit8MathFunctions, CosPiSpecificValues) {
+  current_operation = "Cosine Function (cos(π*x)) Special Cases";
 
   // cos(π*0) = cos(0) = 1
   posit8 zero = posit8(0.0);
@@ -137,10 +137,10 @@ TEST(Posit8MathFunctions, CosPiSpecificValues) {
   ASSERT_TRUE(result_nar.isNaR())
       << "cos_pi(NaR) = " << result_nar.toDouble() << " but expected NaR";
 }
-#endif
 
 // Test for p8_tan_pi function implementation
 TEST(Posit8MathFunctions, TanPiFunction) {
+  current_operation = "Tangent Function (tan(π*x))";
 
   // Create a distribution that generates values across the full posit8 range
   std::uniform_int_distribution<uint8_t> full_dist(0, 0xFF);
@@ -156,8 +156,7 @@ TEST(Posit8MathFunctions, TanPiFunction) {
 
     double f_a = p_a.toDouble();
 
-    // Skip values where tan(π*x) is undefined (x = n + 0.5 where n is an
-    // integer)
+    // Skip values where tan(π*x) is undefined (x = n + 0.5 where n is an integer)
     double mod_value = std::fabs(f_a - std::round(f_a - 0.5));
     if (mod_value < 0.01) {
       continue;
@@ -174,18 +173,18 @@ TEST(Posit8MathFunctions, TanPiFunction) {
     }
 
     // Allow slightly higher tolerance for tangent due to higher sensitivity
-    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 2e-1))
-        << "Failed tan_pi: tan(π*" << p_a.toDouble()
-        << ") = " << p_result.toDouble() << " but expected "
-        << p_expected.toDouble() << " (hex: 0x" << std::hex << (int)p_a.value
-        << " -> 0x" << (int)p_result.value << ", expected 0x"
+    ASSERT_TRUE(
+        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 2e-1))
+        << "Failed tan_pi: tan(π*" << p_a.toDouble() << ") = " << p_result.toDouble()
+        << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
+        << (int)p_a.value << " -> 0x" << (int)p_result.value << ", expected 0x"
         << (int)p_expected.value << ")";
   }
 }
 
 // Test specific known values for tan_pi function
-#ifdef ENABLE_EXPERIMENTAL_TESTS
 TEST(Posit8MathFunctions, TanPiSpecificValues) {
+  current_operation = "Tangent Function (tan(π*x)) Special Cases";
 
   // tan(π*0) = tan(0) = 0
   posit8 zero = posit8(0.0);
@@ -212,8 +211,7 @@ TEST(Posit8MathFunctions, TanPiSpecificValues) {
   posit8 neg_one = posit8(-1.0);
   posit8 result_neg_quarter = neg_quarter.tan_pi();
   ASSERT_EQ(result_neg_quarter.value, neg_one.value)
-      << "tan(π*(-0.25)) = " << result_neg_quarter.toDouble()
-      << " but expected -1.0";
+      << "tan(π*(-0.25)) = " << result_neg_quarter.toDouble() << " but expected -1.0";
 
   // NaR input should result in NaR
   posit8 p_nar;
@@ -222,11 +220,10 @@ TEST(Posit8MathFunctions, TanPiSpecificValues) {
   ASSERT_TRUE(result_nar.isNaR())
       << "tan_pi(NaR) = " << result_nar.toDouble() << " but expected NaR";
 }
-#endif
 
 // Test Pythagorean identity: sin²(π*x) + cos²(π*x) = 1
-#ifdef ENABLE_EXPERIMENTAL_TESTS
 TEST(Posit8MathFunctions, PythagoreanIdentity) {
+  current_operation = "Pythagorean Identity";
 
   // Create a distribution that generates values across a reasonable range
   std::uniform_real_distribution<double> dist(-0.9, 0.9);
@@ -248,10 +245,8 @@ TEST(Posit8MathFunctions, PythagoreanIdentity) {
     posit8 one = posit8(1.0);
 
     // Allow slightly higher tolerance for this identity check
-    ASSERT_TRUE(double_eq(sum.toDouble(), one.toDouble(), 2e-1))
-        << "Failed Pythagorean identity: sin²(π*" << p_a.toDouble()
-        << ") + cos²(π*" << p_a.toDouble() << ") = " << sum.toDouble()
-        << " but expected 1.0";
+    ASSERT_TRUE(double_eq(sum.toDouble(), one.toDouble(), 1e-12, 2e-1))
+        << "Failed Pythagorean identity: sin²(π*" << p_a.toDouble() << ") + cos²(π*" 
+        << p_a.toDouble() << ") = " << sum.toDouble() << " but expected 1.0";
   }
-}
-#endif
+} 

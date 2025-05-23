@@ -4,6 +4,7 @@
 
 // Test that adding and then subtracting the same value returns the original
 TEST(Posit8Advanced, AddSubCancel) {
+  current_operation = "Add-Sub Cancellation";
 
   // Create a distribution that generates values in the range [-MAX/2, MAX/2]
   std::uniform_int_distribution<int8_t> safe_dist(INT8_MIN / 2, INT8_MAX / 2);
@@ -23,7 +24,7 @@ TEST(Posit8Advanced, AddSubCancel) {
     posit8 original = sum - p_b;
 
     // Allow a slightly higher tolerance for posit8
-    EXPECT_TRUE(double_eq(original.toDouble(), p_a.toDouble(), 1e-1))
+    EXPECT_TRUE(double_eq(original.toDouble(), p_a.toDouble(), 1e-12, 1e-1))
         << "Failed: (" << p_a.toDouble() << " + " << p_b.toDouble() << ") - "
         << p_b.toDouble() << " = " << original.toDouble() << " but expected "
         << p_a.toDouble();
@@ -33,10 +34,10 @@ TEST(Posit8Advanced, AddSubCancel) {
 // // Test that multiplying and then dividing by the same value returns the
 // // original
 // TEST(Posit8Advanced, MulDivCancel) {
+//   current_operation = "Mul-Div Cancellation";
 
 //   // Create a distribution that generates values in the range [-MAX/2, MAX/2]
-//   std::uniform_int_distribution<int8_t> safe_dist(INT8_MIN / 2, INT8_MAX /
-//   2);
+//   std::uniform_int_distribution<int8_t> safe_dist(INT8_MIN / 2, INT8_MAX / 2);
 
 //   for (int i = 0; i < NTESTS8 / 10; i++) { // Reduced iteration count
 //     posit8 p_a, p_b;
@@ -54,7 +55,7 @@ TEST(Posit8Advanced, AddSubCancel) {
 //     posit8 original = product / p_b;
 
 //     // Allow a slightly higher tolerance for posit8
-//     EXPECT_TRUE(double_eq(original.toDouble(), p_a.toDouble(), 1e-1))
+//     EXPECT_TRUE(double_eq(original.toDouble(), p_a.toDouble(), 1e-12, 1e-1))
 //         << "Failed: (" << p_a.toDouble() << " * " << p_b.toDouble() << ") / "
 //         << p_b.toDouble() << " = " << original.toDouble() << " but expected "
 //         << p_a.toDouble();
@@ -63,6 +64,7 @@ TEST(Posit8Advanced, AddSubCancel) {
 
 // Test for overflow behavior
 TEST(Posit8Advanced, OverflowHandling) {
+  current_operation = "Overflow Handling";
 
   // Test overflow with addition
   posit8 max_posit = posit8().maxpos();
@@ -86,6 +88,7 @@ TEST(Posit8Advanced, OverflowHandling) {
 
 // Test for subnormal values handling
 TEST(Posit8Advanced, SubnormalHandling) {
+  current_operation = "Subnormal Values";
 
   // Test with very small positive values
   posit8 min_positive = posit8().minpos();
@@ -103,4 +106,4 @@ TEST(Posit8Advanced, SubnormalHandling) {
   // Should not be zero
   EXPECT_NE(half_max_neg.value, 0)
       << "Half of minneg became zero, expected a small negative value";
-}
+} 

@@ -6,6 +6,7 @@
 
 // Test case for addition
 TEST(Posit16Arithmetic, Add) {
+  current_operation = "Addition";
   test_exact<posit16>(
       NTESTS16,
       // Posit operation
@@ -18,6 +19,7 @@ TEST(Posit16Arithmetic, Add) {
 
 // Test case for subtraction
 TEST(Posit16Arithmetic, Sub) {
+  current_operation = "Subtraction";
   test_exact<posit16>(
       NTESTS16,
       // Posit operation
@@ -30,6 +32,7 @@ TEST(Posit16Arithmetic, Sub) {
 
 // Test case for multiplication
 TEST(Posit16Arithmetic, Mul) {
+  current_operation = "Multiplication";
   test_exact<posit16>(
       NTESTS16,
       // Posit operation
@@ -42,6 +45,7 @@ TEST(Posit16Arithmetic, Mul) {
 
 // Test case for division
 TEST(Posit16Arithmetic, Div) {
+  current_operation = "Division";
   test_exact<posit16>(
       NTESTS16,
       // Posit operation
@@ -65,6 +69,7 @@ TEST(Posit16Arithmetic, Div) {
 
 // Test square root operation
 TEST(Posit16Arithmetic, Sqrt) {
+  current_operation = "Square Root";
 
   for (int i = 0; i < NTESTS16; i++) {
     // Generate random posit value
@@ -91,6 +96,7 @@ TEST(Posit16Arithmetic, Sqrt) {
 
 // Test rounding operation
 TEST(Posit16Arithmetic, Round) {
+  current_operation = "Rounding";
   for (int i = 0; i < NTESTS16; i++) {
     // Generate random posit value
     posit16 p_a;
@@ -121,6 +127,7 @@ TEST(Posit16Arithmetic, Round) {
 
 // Test fused multiply-add operation
 TEST(Posit16Arithmetic, MulAdd) {
+  current_operation = "Fused Multiply-Add";
   for (int i = 0; i < NTESTS16; i++) {
     // Generate random posit values
     posit16 p_a, p_b, p_c;
@@ -156,6 +163,7 @@ TEST(Posit16Arithmetic, MulAdd) {
 
 // Test fused multiply-subtract operation (a*b-c)
 TEST(Posit16Arithmetic, MulSub) {
+  current_operation = "Fused Multiply-Subtract";
   for (int i = 0; i < NTESTS16; i++) {
     // Generate random posit values
     posit16 p_a, p_b, p_c;
@@ -191,6 +199,7 @@ TEST(Posit16Arithmetic, MulSub) {
 
 // Test negative fused multiply-add operation (c-a*b)
 TEST(Posit16Arithmetic, SubMul) {
+  current_operation = "Negative Fused Multiply-Add";
   for (int i = 0; i < NTESTS16; i++) {
     // Generate random posit values
     posit16 p_a, p_b, p_c;

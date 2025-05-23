@@ -4,7 +4,6 @@
 
 // Test for p16_exp function implementation
 TEST(Posit16MathFunctions, ExpFunction) {
-  current_operation = "Exponential Function";
 
   // Create a distribution that generates values across the full posit16 range
   std::uniform_int_distribution<uint16_t> full_dist(0, 0xFFFF);
@@ -30,8 +29,7 @@ TEST(Posit16MathFunctions, ExpFunction) {
     }
 
     // Allow small differences due to rounding
-    ASSERT_TRUE(
-        double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-12, 1e-1))
+    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-1))
         << "Failed exp: exp(" << p_a.toDouble() << ") = " << p_result.toDouble()
         << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
         << p_a.value << " -> 0x" << p_result.value << ", expected 0x"
@@ -41,7 +39,6 @@ TEST(Posit16MathFunctions, ExpFunction) {
 
 // Test specific known values for exponential function
 TEST(Posit16MathFunctions, ExpSpecificValues) {
-  current_operation = "Exponential Function Special Cases";
 
   // exp(0) = 1
   posit16 zero = posit16(0.0);
@@ -76,7 +73,6 @@ TEST(Posit16MathFunctions, ExpSpecificValues) {
 
 // Test the identity: e^(a+b) = e^a * e^b
 TEST(Posit16MathFunctions, ExpAdditiveProperty) {
-  current_operation = "Exponential Additive Property";
 
   // Create a distribution that generates values in a safe range to avoid
   // overflow
@@ -99,7 +95,7 @@ TEST(Posit16MathFunctions, ExpAdditiveProperty) {
     posit16 product = exp_a * exp_b;
 
     // Allow slightly higher tolerance for this complex operation
-    ASSERT_TRUE(double_eq(exp_sum.toDouble(), product.toDouble(), 1e-12, 1e-1))
+    ASSERT_TRUE(double_eq(exp_sum.toDouble(), product.toDouble(), 1e-1))
         << "Failed: exp(" << p_a.toDouble() << " + " << p_b.toDouble()
         << ") = " << exp_sum.toDouble() << " but exp(" << p_a.toDouble()
         << ") * exp(" << p_b.toDouble() << ") = " << product.toDouble();
@@ -108,7 +104,6 @@ TEST(Posit16MathFunctions, ExpAdditiveProperty) {
 
 // // Test the identity: (e^a)^b = e^(a*b)
 // TEST(Posit16MathFunctions, ExpPowerProperty) {
-//   current_operation = "Exponential Power Property";
 
 //   // Create a distribution that generates values in a safe range to avoid
 //   // overflow
@@ -137,7 +132,7 @@ TEST(Posit16MathFunctions, ExpAdditiveProperty) {
 
 //     // Allow higher tolerance for pow operations
 //     ASSERT_TRUE(
-//         double_eq(left_side.toDouble(), right_side.toDouble(), 1e-12, 1e-1))
+//         double_eq(left_side.toDouble(), right_side.toDouble(), 1e-1))
 //         << "Failed: (exp(" << p_a.toDouble() << "))^" << p_b.toDouble() << "
 //         = "
 //         << left_side.toDouble() << " but exp(" << p_a.toDouble() << " * "
