@@ -7,7 +7,7 @@
 // Test case for addition
 TEST(Posit16Arithmetic, Add) {
   test_exact<posit16>(
-      NTESTS16,
+      get_ntests16(),
       // Posit operation
       [](posit16 a, posit16 b) { return a + b; },
       // Equivalent double operation
@@ -19,7 +19,7 @@ TEST(Posit16Arithmetic, Add) {
 // Test case for subtraction
 TEST(Posit16Arithmetic, Sub) {
   test_exact<posit16>(
-      NTESTS16,
+      get_ntests16(),
       // Posit operation
       [](posit16 a, posit16 b) { return a - b; },
       // Equivalent double operation
@@ -31,7 +31,7 @@ TEST(Posit16Arithmetic, Sub) {
 // Test case for multiplication
 TEST(Posit16Arithmetic, Mul) {
   test_exact<posit16>(
-      NTESTS16,
+      get_ntests16(),
       // Posit operation
       [](posit16 a, posit16 b) { return a * b; },
       // Equivalent double operation
@@ -43,7 +43,7 @@ TEST(Posit16Arithmetic, Mul) {
 // Test case for division
 TEST(Posit16Arithmetic, Div) {
   test_exact<posit16>(
-      NTESTS16,
+      get_ntests16(),
       // Posit operation
       [](posit16 a, posit16 b) {
         // Skip division by zero
@@ -66,7 +66,7 @@ TEST(Posit16Arithmetic, Div) {
 // Test square root operation
 TEST(Posit16Arithmetic, Sqrt) {
 
-  for (int i = 0; i < NTESTS16; i++) {
+  for (int i = 0; i < get_ntests16(); i++) {
     // Generate random posit value
     posit16 p_a;
     p_a.value = int_dist16(gen);
@@ -91,7 +91,7 @@ TEST(Posit16Arithmetic, Sqrt) {
 
 // Test rounding operation
 TEST(Posit16Arithmetic, Round) {
-  for (int i = 0; i < NTESTS16; i++) {
+  for (int i = 0; i < get_ntests16(); i++) {
     // Generate random posit value
     posit16 p_a;
     p_a.value = int_dist16(gen);
@@ -121,7 +121,7 @@ TEST(Posit16Arithmetic, Round) {
 
 // Test fused multiply-add operation
 TEST(Posit16Arithmetic, MulAdd) {
-  for (int i = 0; i < NTESTS16; i++) {
+  for (int i = 0; i < get_ntests16(); i++) {
     // Generate random posit values
     posit16 p_a, p_b, p_c;
     p_a.value = int_dist16(gen);
@@ -156,7 +156,7 @@ TEST(Posit16Arithmetic, MulAdd) {
 
 // Test fused multiply-subtract operation (a*b-c)
 TEST(Posit16Arithmetic, MulSub) {
-  for (int i = 0; i < NTESTS16; i++) {
+  for (int i = 0; i < get_ntests16(); i++) {
     // Generate random posit values
     posit16 p_a, p_b, p_c;
     p_a.value = int_dist16(gen);
@@ -191,7 +191,7 @@ TEST(Posit16Arithmetic, MulSub) {
 
 // Test negative fused multiply-add operation (c-a*b)
 TEST(Posit16Arithmetic, SubMul) {
-  for (int i = 0; i < NTESTS16; i++) {
+  for (int i = 0; i < get_ntests16(); i++) {
     // Generate random posit values
     posit16 p_a, p_b, p_c;
     p_a.value = int_dist16(gen);

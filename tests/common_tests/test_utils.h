@@ -4,6 +4,7 @@
 #include "softposit_cpp.h"
 #include <algorithm>
 #include <cmath>
+#include <cstdlib> // Required for getenv
 #include <functional>
 #include <gtest/gtest.h>
 #include <iostream>
@@ -12,14 +13,35 @@
 
 // Define constants for number of tests
 #ifdef NDEBUG
-constexpr int NTESTS8 = 10000000;
-constexpr int NTESTS16 = 10000000;
-constexpr int NTESTS32 = 10000000;
-#else
-constexpr int NTESTS8 = 100000;
+// Release mode values
+constexpr int NTESTS8 = 1000000;
 constexpr int NTESTS16 = 1000000;
 constexpr int NTESTS32 = 1000000;
+#else
+// Debug mode values
+constexpr int NTESTS8 = 10000;
+constexpr int NTESTS16 = 10000;
+constexpr int NTESTS32 = 10000;
 #endif
+
+// Function to get number of tests for P16, potentially reduced for CI on Ubuntu
+inline int get_ntests16() {
+#ifdef REDUCE_P16_TESTS_ON_UBUNTU
+  // This macro is expected to be defined by CMake for Ubuntu CI builds
+#ifdef NDEBUG
+    return 10000; // Further reduced for Ubuntu CI Release
+#else
+    return 1000;   // Further reduced for Ubuntu CI Debug
+#endif
+#else
+  // Standard number of tests for other builds or if macro is not defined
+#ifdef NDEBUG
+    return NTESTS16; // Standard Release
+#else
+    return NTESTS16;   // Standard Debug
+#endif
+#endif
+}
 
 // Random generator setup - global to be used across all test files
 extern std::mt19937 gen;

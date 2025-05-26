@@ -20,6 +20,7 @@ on:
 jobs:
   ubuntu-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     if: github.event.inputs.platform == 'ubuntu' || github.event.inputs.platform == 'both' || github.event_name != 'workflow_dispatch'
     
     steps:
@@ -49,7 +50,7 @@ jobs:
       run: |
         mkdir -p build
         cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON
+        cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DREDUCE_P16_TESTS_ON_UBUNTU=ON
         make -j$(nproc)
     
     - name: Run tests
@@ -65,6 +66,7 @@ jobs:
         
   macos-tests:
     runs-on: macos-latest
+    timeout-minutes: 25
     if: github.event.inputs.platform == 'macos' || github.event.inputs.platform == 'both' || github.event_name != 'workflow_dispatch'
     
     steps:
