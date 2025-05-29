@@ -101,3 +101,32 @@ TEST(Posit16MathFunctions, ExpAdditiveProperty) {
         << ") * exp(" << p_b.toDouble() << ") = " << product.toDouble();
   }
 }
+
+// Tests for p16_exp2 implementation
+TEST(Posit16MathFunctions, Exp2Function) {
+  std::uniform_int_distribution<uint16_t> full_dist(0, 0xFFFF);
+
+  for (int i = 0; i < NTESTS16; i++) {
+    posit16 p_a;
+    p_a.value = full_dist(gen);
+
+    if (p_a.isNaR()) {
+      continue;
+    }
+
+    double f_a = p_a.toDouble();
+    posit16 p_result = p_a.exp2();
+    double f_result = std::pow(2.0, f_a);
+    posit16 p_expected = posit16(f_result);
+
+    if (p_expected.value == 0 || p_expected.isNaR()) {
+      continue;
+    }
+
+    ASSERT_TRUE(double_eq(p_result.toDouble(), p_expected.toDouble(), 1e-1))
+        << "Failed exp2: exp2(" << f_a << ") = " << p_result.toDouble()
+        << " but expected " << p_expected.toDouble() << " (hex: 0x" << std::hex
+        << p_a.value << " -> 0x" << p_result.value << ", expected 0x"
+        << p_expected.value << ")";
+  }
+}
