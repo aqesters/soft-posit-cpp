@@ -1,4 +1,3 @@
-
 /*============================================================================
 
 This C source file is part of the SoftPosit Posit Arithmetic Package
@@ -52,15 +51,19 @@ void separate_bits_tmp(uint_fast16_t ui, int_fast8_t *k, uint_fast16_t *tmp) {
   *k = 0;
 
   if (regS) {
-    while (*tmp >> 15) {
+    int_fast8_t shift_count = 0;
+    while (*tmp >> 15 && shift_count < 16) {
       (*k)++;
       *tmp = (*tmp << 1) & 0xFFFF;
+      shift_count++;
     }
   } else {
     *k = -1;
-    while (!(*tmp >> 15)) {
+    int_fast8_t shift_count = 0;
+    while (!(*tmp >> 15) && *tmp != 0 && shift_count < 16) {
       (*k)--;
       *tmp = (*tmp << 1) & 0xFFFF;
+      shift_count++;
     }
     *tmp &= 0x7FFF;
   }
@@ -221,9 +224,17 @@ posit16_t softposit_mulAddP16(uint_fast16_t uiA, uint_fast16_t uiB,
     } else {
       // For subtract cases, renormalize if needed
       if (frac32Z != 0) {
-        while ((frac32Z >> 29) == 0) {
+        // Add bounds checking to prevent infinite loop
+        int_fast8_t normalization_steps = 0;
+        while ((frac32Z >> 29) == 0 && normalization_steps < 15) {
           kZ--;
           frac32Z <<= 2;
+          normalization_steps++;
+        }
+        // If we've shifted too much, the result is effectively zero
+        if (normalization_steps >= 15) {
+          uZ.ui = 0;
+          return uZ.p;
         }
       }
       bool ecarry = ((frac32Z & 0x40000000) >> 30) != 0;
