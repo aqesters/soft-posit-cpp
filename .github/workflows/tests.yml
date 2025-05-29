@@ -21,7 +21,7 @@ on:
 jobs:
   ubuntu-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     if: github.event.inputs.platform == 'ubuntu' || github.event.inputs.platform == 'all' || github.event_name != 'workflow_dispatch'
     
     steps:
@@ -67,7 +67,7 @@ jobs:
         
   macos-tests:
     runs-on: macos-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     if: github.event.inputs.platform == 'macos' || github.event.inputs.platform == 'all' || github.event_name != 'workflow_dispatch'
     
     steps:
@@ -112,7 +112,7 @@ jobs:
 
   riscv-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     if: github.event.inputs.platform == 'riscv' || github.event.inputs.platform == 'all' || github.event_name != 'workflow_dispatch'
     
     steps:
@@ -161,11 +161,10 @@ jobs:
           -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
           -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
           -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY \
-          -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" \
-          -DREDUCE_P16_TESTS_ON_UBUNTU=ON
+          -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++"
         make -j$(nproc)
     
-    - name: Run RISC-V tests
+    - name: Run tests
       run: |
         cd build-riscv
         chmod +x *_tests
