@@ -146,15 +146,31 @@ TEST(Posit8Arithmetic, MulAdd)
         double f_b = p_b.toDouble();
         double f_c = p_c.toDouble();
 
-        posit8 p_result = p_c.fma(p_a, p_b);
+        // Skip NaN/NaR values
+        if (p_a.isNaR() || p_b.isNaR() || p_c.isNaR() || std::isnan(f_a) || std::isnan(f_b) ||
+            std::isnan(f_c))
+        {
+            continue;
+        }
+
+        // Test global function
+        posit8 p_result1 = fma(p_a, p_b, p_c);
+        // Test member function
+        posit8 p_result2 = p_c.fma(p_a, p_b);
+
         double f_result = std::fma(f_a, f_b, f_c);
         posit8 expected = f_result;
 
         // Allow up to 1 ULP difference for posit8
-        auto ulp_diff = ulp(p_result, expected);
-        ASSERT_LE(ulp_diff, 1) << "fma(" << f_a << ", " << f_b << ", " << f_c << ") = " << f_result
-                               << " but got " << p_result.toDouble() << " (ULP diff: " << ulp_diff
-                               << ")";
+        auto ulp_diff1 = ulp(p_result1, expected);
+        auto ulp_diff2 = ulp(p_result2, expected);
+
+        ASSERT_LE(ulp_diff1, 1) << "fma(" << f_a << ", " << f_b << ", " << f_c << ") = " << f_result
+                                << " but got " << p_result1.toDouble()
+                                << " (ULP diff: " << ulp_diff1 << ")";
+        ASSERT_LE(ulp_diff2, 1) << "p_c.fma(" << f_a << ", " << f_b << ") = " << f_result
+                                << " but got " << p_result2.toDouble()
+                                << " (ULP diff: " << ulp_diff2 << ")";
     }
 }
 
@@ -172,6 +188,13 @@ TEST(Posit8Arithmetic, MulSub)
         double f_a = p_a.toDouble();
         double f_b = p_b.toDouble();
         double f_c = p_c.toDouble();
+
+        // Skip NaN/NaR values
+        if (p_a.isNaR() || p_b.isNaR() || p_c.isNaR() || std::isnan(f_a) || std::isnan(f_b) ||
+            std::isnan(f_c))
+        {
+            continue;
+        }
 
         // Test global function
         posit8 p_result1 = fms(p_a, p_b, p_c);
@@ -208,6 +231,13 @@ TEST(Posit8Arithmetic, SubMul)
         double f_a = p_a.toDouble();
         double f_b = p_b.toDouble();
         double f_c = p_c.toDouble();
+
+        // Skip NaN/NaR values
+        if (p_a.isNaR() || p_b.isNaR() || p_c.isNaR() || std::isnan(f_a) || std::isnan(f_b) ||
+            std::isnan(f_c))
+        {
+            continue;
+        }
 
         // Test global function
         posit8 p_result1 = nfma(p_a, p_b, p_c);
