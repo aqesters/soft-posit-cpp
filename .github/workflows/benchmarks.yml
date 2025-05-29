@@ -1,0 +1,58 @@
+name: Run Benchmarks
+
+on:
+  push:
+    branches: [ "main" ]  # Only run on main branch to avoid too many benchmark runs
+  workflow_dispatch:
+
+jobs:
+  benchmarks:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Generate cache key
+      id: cache-key
+      run: |
+        echo "key=build-ubuntu-${{ hashFiles('**/*.cpp', '**/*.h', '**/*.c', '**/CMakeLists.txt') }}" >> $GITHUB_OUTPUT
+      
+    - name: Restore build cache
+      id: cache-build
+      uses: actions/cache@v3
+      with:
+        path: build
+        key: ${{ steps.cache-key.outputs.key }}
+        
+    - name: Set up dependencies
+      if: steps.cache-build.outputs.cache-hit != 'true'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake make g++ ninja-build
+
+    - name: Configure and Build
+      if: steps.cache-build.outputs.cache-hit != 'true'
+      run: |
+        mkdir -p build
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_BENCHMARKS=ON
+        make -j$(nproc)
+    
+    - name: Run benchmarks
+      run: |
+        cd build
+        chmod +x benchmark/*
+        make bench
+        
+    - name: Store benchmark results
+      uses: benchmark-action/github-action-benchmark@v1
+      with:
+        tool: 'googlecpp'
+        output-file-path: build/benchmarks/results.json
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        auto-push: true
+        # Comment out the following lines for the first run
+        # alert-threshold: '150%'
+        # comment-on-alert: true
+        # fail-on-alert: true

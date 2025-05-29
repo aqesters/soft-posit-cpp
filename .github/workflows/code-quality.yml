@@ -1,0 +1,70 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ "main", "**" ]
+  pull_request:
+    branches: [ "main", "**" ]
+  workflow_dispatch:
+
+jobs:
+  clang-format:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install clang-format
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang-format-14
+
+    - name: Create or copy .clang-format if it doesn't exist
+      run: |
+        if [ ! -f .clang-format ]; then
+          printf '%s\n' \
+            "---" \
+            "Language: Cpp" \
+            "BasedOnStyle: Google" \
+            "IndentWidth: 2" \
+            "ColumnLimit: 100" \
+            "AlignConsecutiveAssignments: true" \
+            "AlignConsecutiveDeclarations: true" \
+            "AlignTrailingComments: true" \
+            "AllowShortFunctionsOnASingleLine: All" \
+            "AllowShortIfStatementsOnASingleLine: true" \
+            "BreakBeforeBraces: Attach" \
+            "PointerAlignment: Left" > .clang-format
+        fi
+
+    - name: Run clang-format-check
+      uses: jidicula/clang-format-action@v4.11.0
+      with:
+        clang-format-version: '14'
+        check-path: 'src include tests examples'
+
+  clang-tidy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake make g++ ninja-build clang-tidy-14
+
+    - name: Generate compile_commands.json
+      run: |
+        mkdir -p build
+        cd build
+        cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+    - name: Run clang-tidy
+      run: |
+        find src include tests -name "*.cpp" -o -name "*.h" -o -name "*.c" | \
+        xargs clang-tidy-14 -p build/compile_commands.json \
+        -checks='-*,performance-*,readability-*,bugprone-*,modernize-*,clang-analyzer-*,cppcoreguidelines-*,misc-*,-modernize-use-trailing-return-type' \
+        --warnings-as-errors='*' 
