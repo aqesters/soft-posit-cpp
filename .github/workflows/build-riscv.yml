@@ -32,16 +32,21 @@ jobs:
         path: build-riscv
         key: ${{ steps.cache-key.outputs.key }}
         
-    - name: Set up RISC-V toolchain and dependencies
-      if: steps.cache-build.outputs.cache-hit != 'true'
+    - name: Set up runtime dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y cmake make ninja-build qemu-user-static
+        sudo apt-get install -y qemu-user-static
+        # Verify QEMU installation
+        qemu-riscv64-static --version
+        
+    - name: Set up RISC-V build toolchain
+      if: steps.cache-build.outputs.cache-hit != 'true'
+      run: |
+        sudo apt-get install -y cmake make ninja-build
         sudo apt-get install -y gcc-riscv64-linux-gnu g++-riscv64-linux-gnu
         # Verify toolchain installation
         riscv64-linux-gnu-gcc --version
         riscv64-linux-gnu-g++ --version
-        qemu-riscv64-static --version
 
     - name: Configure CMake for RISC-V
       if: steps.cache-build.outputs.cache-hit != 'true'
