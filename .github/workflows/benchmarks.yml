@@ -93,6 +93,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y qemu-user-static
+        sudo apt-get install -y libc6-dev-riscv64-cross
         
     - name: Set up RISC-V build toolchain
       if: steps.cache-build.outputs.cache-hit != 'true'
