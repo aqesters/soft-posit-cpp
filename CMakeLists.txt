@@ -253,7 +253,7 @@ if(BUILD_TESTS)
   # Function to add test executable with auto-discovered test files
   function(add_posit_test_executable NAME SIZE)
     # Auto-discover test files in the directory
-    file(GLOB TEST_SOURCES "${TESTS_DIR}/${NAME}_tests/*.cpp")
+    file(GLOB TEST_SOURCES CONFIGURE_DEPENDS "${TESTS_DIR}/${NAME}_tests/*.cpp")
     
     # Add the test executable with all discovered files
     add_executable(${NAME}_tests 
