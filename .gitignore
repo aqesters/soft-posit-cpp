@@ -6,3 +6,5 @@ install/*
 examples/build/*
 scratch.cpp
 package_tests
+.vscode/c_cpp_properties.json
+.vscode/launch.json
